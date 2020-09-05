@@ -7,7 +7,7 @@
 
 * body 
 
-| 參數     | 型別   | 備注 |
+| 參數     | 型別   | 備註 |
 | -------- | ------ | ---- |
 | account  | string | 帳號 |
 | password | string | 密碼 |
@@ -27,7 +27,7 @@
 
 * body 
 
-| 參數     | 型別   | 備注           |
+| 參數     | 型別   | 備註           |
 | -------- | ------ | -------------- |
 | account  | string | 帳號，最多30字 |
 | password | string | 密碼           |
@@ -45,13 +45,13 @@
 
 * query
 
-| 參數    | 型別   | 備注                         |
+| 參數    | 型別   | 備註                         |
 | ------- | ------ | ---------------------------- |
 | item_id | string | 財產編號，例如3111401-47-3-3 |
 
 * error code
 
-| Status Code | 備注                   |
+| Status Code | 備註                   |
 | ----------- | ---------------------- |
 | 400         | 參數或是item not found |
 
@@ -66,7 +66,7 @@
   "item_id": "abc", // 財產編號
   "location": "e124", // 存置地點
   "name": "HI", // 財產名稱
-  "note": "none", // 備注
+  "note": "none", // 備註
   "state": { // 自盤結果
     "correct": false, // 符合
     "discard": false, // 報廢
@@ -74,4 +74,32 @@
     "unlabel": true // 標籤未貼
   }
 }
+```
+
+### PUT `/api/item`
+
+* body 
+
+| 參數          | 型別    | 備註             |
+| ------------- | ------- | ---------------- |
+| item_id       | string  | 財產編號         |
+| location      | string  | 擺放位置（可選） |
+| note          | string  | 備註（可選）     |
+| state         | object  | 自盤結果（可選） |
+| state.correct | boolean | 符合             |
+| state.discard | boolean | 報修             |
+| state.fixing  | boolean | 送修             |
+| state.unlabel | boolean | 標籤未貼         |
+
+* error code
+
+| Status Code | 備註                   |
+| ----------- | ---------------------- |
+| 400         | 參數或是item not found |
+| 502         | 資料庫更新失敗         |
+
+* success reply
+
+```
+{}
 ```

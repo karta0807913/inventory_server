@@ -142,4 +142,19 @@ func TestApi(t *testing.T) {
 
 	response, data = getItem(item.ItemID)
 	assert.Equal(t, item, *data)
+
+	//PUT
+	item.Note = "12oiunkvdv"
+	body, err = newBody(gin.H{
+		"item_id": item.ItemID,
+		"note":    item.Note,
+	})
+	assert.Equal(t, err, nil)
+	request = httptest.NewRequest("PUT", "/item", body)
+	response = httptest.NewRecorder()
+	serv.ServeHTTP(response, request)
+	assert.Equal(t, 200, response.Code)
+
+	response, data = getItem(item.ItemID)
+	assert.Equal(t, item, *data)
 }

@@ -36,6 +36,7 @@ func ApiRouter(config RouterConfig) {
 			ItemID   string           `json:"item_id" binding:"required"`
 			Location *string          `json:"location"`
 			State    *model.ItemState `json:"state"`
+			Note     *string          `json:"note"`
 		}
 		var body Body
 		err := c.ShouldBindJSON(&body)
@@ -61,6 +62,12 @@ func ApiRouter(config RouterConfig) {
 		} else {
 			body.State = &model.ItemState{}
 		}
+		if body.Note != nil {
+			Select = append(Select, "Note")
+			flag = true
+		} else {
+			body.Note = new(string)
+		}
 		if !flag {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"message": "must contain one of location and state",
@@ -73,6 +80,7 @@ func ApiRouter(config RouterConfig) {
 		).Where("item_id=?", body.ItemID).Updates(&model.ItemTable{
 			State:    *body.State,
 			Location: *body.Location,
+			Note:     *body.Note,
 		}).Error
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{
