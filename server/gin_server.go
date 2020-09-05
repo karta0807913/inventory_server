@@ -5,7 +5,7 @@ import (
 )
 
 func NewGinServer(config ServerSettings) (*gin.Engine, error) {
-	jwt, err := NewJwtHelper(config.PrivateKeyPath)
+	jwt, err := NewJwtHelperFromPem(config.PrivateKeyPath)
 	if err != nil {
 		return nil, err
 	}

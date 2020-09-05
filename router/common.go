@@ -41,7 +41,7 @@ func CommonRouter(config RouterConfig) {
 		err = db.Select(
 			"ID", "Account", "Name",
 		).First(
-			body, "Account=? and Password=?",
+			&body, "Account=? and Password=?",
 			body.Account, saltPassword(body.Password),
 		).Error
 		if err != nil {
@@ -53,7 +53,9 @@ func CommonRouter(config RouterConfig) {
 		}
 		session := c.MustGet("session").(server.Session)
 		session.Set("user_id", body.ID)
-		c.JSON(http.StatusOK, gin.H{})
+		c.JSON(http.StatusOK, gin.H{
+			"Name": body.Name,
+		})
 	})
 
 	router.POST("/sign_up", func(c *gin.Context) {

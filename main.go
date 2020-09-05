@@ -26,10 +26,8 @@ func main() {
 			log.Fatal("Generate key error", err)
 		}
 		server.SavePEMKey(PrivateKeyPath, pKey)
-	} else {
-		log.Fatal("read private key file error", err)
 	}
-	jwt, err := server.NewJwtHelper(PrivateKeyPath)
+	jwt, err := server.NewJwtHelperFromPem(PrivateKeyPath)
 	if err != nil {
 		log.Fatal("read private key file error", err)
 	}

@@ -25,7 +25,7 @@ func (self JwtSignatureTimeOut) Error() string {
 	return "signature not vailed"
 }
 
-func NewJwtHelper(private_pem_key_path string) (*JwtHelper, error) {
+func NewJwtHelperFromPem(private_pem_key_path string) (*JwtHelper, error) {
 	private_key_file, err := os.OpenFile(private_pem_key_path, os.O_RDONLY, 0644)
 	if err != nil {
 		return nil, err
@@ -42,12 +42,12 @@ func NewJwtHelper(private_pem_key_path string) (*JwtHelper, error) {
 	}
 
 	private_key, err := x509.ParsePKCS1PrivateKey(private_key_block.Bytes)
-	if err != nil {
-		return nil, err
-	}
+	return NewJwtHelper(private_key)
+}
 
+func NewJwtHelper(pKey *rsa.PrivateKey) (*JwtHelper, error) {
 	return &JwtHelper{
-		private_key: private_key,
+		private_key: pKey,
 	}, nil
 }
 

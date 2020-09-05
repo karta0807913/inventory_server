@@ -18,7 +18,7 @@ type ServerSettings struct {
 }
 
 func NewSessionHttpServer(config ServerSettings) (*HttpServer, error) {
-	jwt, err := NewJwtHelper(config.PrivateKeyPath)
+	jwt, err := NewJwtHelperFromPem(config.PrivateKeyPath)
 	if err != nil {
 		return nil, err
 	}
