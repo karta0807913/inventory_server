@@ -3,6 +3,7 @@ module github.com/karta0807913/inventory_server
 go 1.14
 
 require (
+	github.com/fatih/structtag v1.2.0
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-delve/delve v1.5.0 // indirect
 	github.com/go-playground/assert/v2 v2.0.1
@@ -15,7 +16,8 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/pascaldekloe/jwt v1.10.0
 	golang.org/x/sys v0.0.0-20200831180312-196b9ba8737a // indirect
-	google.golang.org/protobuf v1.25.0 // indirect
+	golang.org/x/tools v0.0.0-20191127201027-ecd32218bd7f
+	google.golang.org/protobuf v1.25.0
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gorm.io/driver/sqlite v1.1.1
 	gorm.io/gorm v1.20.0
