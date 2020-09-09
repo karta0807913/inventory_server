@@ -60,9 +60,14 @@ func MethodUpdate(arg MethodUpdateParams) *TemplateRoot {
 
 		// if this field is required
 		if arg.IndexField == field.Name {
-			tf.Tag = "`" + strings.Join(
-				append(tags, `binding:"required"`), " ") + "`"
-			flag = 31
+			if templateRoot.IndexField != nil {
+				templateRoot.IndexField.Tag = "`" + strings.Join(indexTags, " ") + "`"
+				templateRoot.OptionalFields = append(templateRoot.OptionalFields,
+					*templateRoot.IndexField)
+			}
+			templateRoot.IndexField = &tf
+			indexTags = tags
+			indexFlag = 31
 		} else if arg.IgnoreSet.CheckAndDelete(field.Name) {
 			continue
 		} else if arg.RequireSet.CheckAndDelete(field.Name) {

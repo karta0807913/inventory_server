@@ -11,8 +11,9 @@ import (
 // data will put into struct
 func (insert *ItemTable) PUT(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
-		AgeLimit uint `json:"age_limit" binding:"rqeuired"`
+		ItemID string `json:"item_id" binding:"rqeuired"`
 
+		AgeLimit *uint      `json:"age_limit"`
 		Location *string    `json:"location"`
 		State    *ItemState `json:"state"`
 		Note     *string    `json:"note"`
@@ -24,6 +25,12 @@ func (insert *ItemTable) PUT(c *gin.Context, db *gorm.DB) error {
 	}
 
 	selectField := make([]string, 0)
+
+	if body.AgeLimit == nil {
+		body.AgeLimit = new(uint)
+	} else {
+		selectField = append(selectField, "AgeLimit")
+	}
 
 	if body.Location == nil {
 		body.Location = new(string)
@@ -47,12 +54,13 @@ func (insert *ItemTable) PUT(c *gin.Context, db *gorm.DB) error {
 		return errors.New("rqeuire at least one option")
 	}
 
-	insert.AgeLimit = body.AgeLimit
+	insert.ItemID = body.ItemID
+	insert.AgeLimit = *body.AgeLimit
 	insert.Location = *body.Location
 	insert.State = *body.State
 	insert.Note = *body.Note
 
 	return db.Select(
 		selectField[0], selectField[1:],
-	).Where("AgeLimit=?", body.AgeLimit).Updates(&insert).Error
+	).Where("ItemID=?", body.ItemID).Updates(&insert).Error
 }
