@@ -1,4 +1,4 @@
-package server
+package serverutil
 
 import (
 	"database/sql"
@@ -94,6 +94,9 @@ func (self *SQLStorage) Set(session Session) error {
 		return err
 	}
 	return nil
+}
+
+func (self *SQLStorage) ClearExpired() {
 }
 
 func (self *SQLStorage) Del(session_id string) error {

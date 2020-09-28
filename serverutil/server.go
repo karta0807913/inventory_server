@@ -1,4 +1,4 @@
-package server
+package serverutil
 
 import (
 	"encoding/json"
@@ -86,11 +86,11 @@ func (self *SessionServMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		ResponseWriter: w,
 		Session:        session,
 		callback: func(w *ResponseWriter) {
-			self.session_storage.Set(session)
+			expire_date := time.Now().AddDate(0, 0, 1)
+			self.session_storage.Set(session, expire_date)
 			session := map[string]interface{}{
 				"sid": w.Session.GetId(),
 			}
-			expire_date := time.Now().AddDate(0, 0, 1)
 			data, err := self.jwt.Sign(
 				session,
 				expire_date,

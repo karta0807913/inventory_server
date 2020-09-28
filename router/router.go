@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/karta0807913/inventory_server/server"
+	"github.com/karta0807913/inventory_server/serverutil"
 	"gorm.io/gorm"
 )
 
@@ -23,7 +23,7 @@ func InitRouter(config RouterConfig) {
 	})
 
 	apiRouter := router.Group("/api", func(c *gin.Context) {
-		session := c.MustGet("session").(server.Session)
+		session := c.MustGet("session").(serverutil.Session)
 		user_id := session.Get("user_id")
 		if user_id == nil {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{

@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/karta0807913/inventory_server/model"
 	"github.com/karta0807913/inventory_server/router"
-	"github.com/karta0807913/inventory_server/server"
+	"github.com/karta0807913/inventory_server/serverutil"
 )
 
 func main() {
@@ -21,21 +21,21 @@ func main() {
 	serv := gin.Default()
 	_, err = os.Stat(PrivateKeyPath)
 	if os.IsNotExist(err) {
-		pKey, err := server.GenerateKey()
+		pKey, err := serverutil.GenerateKey()
 		if err != nil {
 			log.Fatal("Generate key error", err)
 		}
-		server.SavePEMKey(PrivateKeyPath, pKey)
+		serverutil.SavePEMKey(PrivateKeyPath, pKey)
 	}
-	jwt, err := server.NewJwtHelperFromPem(PrivateKeyPath)
+	jwt, err := serverutil.NewJwtHelperFromPem(PrivateKeyPath)
 	if err != nil {
 		log.Fatal("read private key file error", err)
 	}
-	storage, err := server.NewGormStorage(db)
+	storage, err := serverutil.NewGormStorage(db)
 	if err != nil {
 		log.Fatal("create storage error", err)
 	}
-	sessionFactory := server.NewGinSessionFactory(jwt, storage)
+	sessionFactory := serverutil.NewGinSessionFactory(jwt, storage)
 	serv.Use(sessionFactory.SessionMiddleware("session"))
 	router.InitRouter(router.RouterConfig{
 		Router: serv.Group("/"),

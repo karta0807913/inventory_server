@@ -1,4 +1,4 @@
-package server
+package serverutil
 
 import (
 	"log"
@@ -24,10 +24,8 @@ func (self *GinSessionFactory) final(sessionName string, session Session, c *gin
 	if session.IsEmpty() {
 		return
 	}
-	if session.IsUpdated() {
-		self.session_storage.Set(session)
-	}
 	expire_date := time.Now().AddDate(0, 0, 1)
+	self.session_storage.Set(session, expire_date)
 	sid := map[string]interface{}{
 		"sid": session.GetId(),
 	}

@@ -1,4 +1,4 @@
-package server
+package serverutil
 
 import (
 	"github.com/gin-gonic/gin"

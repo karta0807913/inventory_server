@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/assert/v2"
 	"github.com/karta0807913/inventory_server/model"
-	"github.com/karta0807913/inventory_server/server"
+	"github.com/karta0807913/inventory_server/serverutil"
 	"gorm.io/gorm"
 )
 
@@ -27,20 +27,20 @@ func createServer(t *testing.T, dbname string) (*gin.Engine, *gorm.DB) {
 	if err != nil {
 		t.Fatal("init sqlite error", err)
 	}
-	pKey, err := server.GenerateKey()
+	pKey, err := serverutil.GenerateKey()
 	if err != nil {
 		t.Fatal("create pKey error", err)
 	}
-	jwt, err := server.NewJwtHelper(pKey)
+	jwt, err := serverutil.NewJwtHelper(pKey)
 	if err != nil {
 		t.Fatal("create jwt error", err)
 	}
-	storage, err := server.NewGormStorage(db)
+	storage, err := serverutil.NewGormStorage(db)
 	if err != nil {
 		t.Fatal("create storage error", err)
 	}
 	serv.Use(
-		server.NewGinSessionFactory(jwt, storage).SessionMiddleware("session"),
+		serverutil.NewGinSessionFactory(jwt, storage).SessionMiddleware("session"),
 	)
 	return serv, db
 }

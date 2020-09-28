@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/karta0807913/inventory_server/model"
-	"github.com/karta0807913/inventory_server/server"
+	"github.com/karta0807913/inventory_server/serverutil"
 )
 
 func saltPassword(str string) string {
@@ -51,7 +51,7 @@ func CommonRouter(config RouterConfig) {
 			})
 			return
 		}
-		session := c.MustGet("session").(server.Session)
+		session := c.MustGet("session").(serverutil.Session)
 		session.Set("user_id", body.ID)
 		c.JSON(http.StatusOK, gin.H{
 			"Name": body.Name,

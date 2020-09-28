@@ -1,4 +1,6 @@
-package server
+package serverutil
+
+import "time"
 
 type Session interface {
 	Get(string) interface{}
@@ -14,9 +16,10 @@ type Session interface {
 
 type Storage interface {
 	Get(string) (Session, error)
-	Set(Session) error
+	Set(Session, time.Time) error
 	Create(interface{}) (Sessoin error)
 	Del(string) error
+	ClearExpired()
 }
 
 type StorageError struct {
@@ -37,6 +40,7 @@ type MapSession struct {
 	session map[string]interface{}
 	updated bool
 	id      string
+	expired time.Time
 }
 
 func (self *MapSession) Clear() {
