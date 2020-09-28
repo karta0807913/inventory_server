@@ -9,7 +9,7 @@ import (
 
 // this file generate by go generate, please don't edit it
 // data will put into struct
-func (insert *ItemTable) PUT(c *gin.Context, db *gorm.DB) error {
+func (insert *ItemTable) Update(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
 		ItemID string `json:"item_id" binding:"required"`
 
@@ -23,42 +23,33 @@ func (insert *ItemTable) PUT(c *gin.Context, db *gorm.DB) error {
 	if err != nil {
 		return err
 	}
+	insert.ItemID = body.ItemID
 
 	selectField := make([]string, 0)
 
-	if body.AgeLimit == nil {
-		body.AgeLimit = new(uint)
-	} else {
-		selectField = append(selectField, "AgeLimit")
+	if body.AgeLimit != nil {
+		selectField = append(selectField, "age_limit")
+		insert.AgeLimit = *body.AgeLimit
 	}
 
-	if body.Location == nil {
-		body.Location = new(string)
-	} else {
-		selectField = append(selectField, "Location")
+	if body.Location != nil {
+		selectField = append(selectField, "location")
+		insert.Location = *body.Location
 	}
 
-	if body.State == nil {
-		body.State = new(ItemState)
-	} else {
-		selectField = append(selectField, "State")
+	if body.State != nil {
+		selectField = append(selectField, "state")
+		insert.State = *body.State
 	}
 
-	if body.Note == nil {
-		body.Note = new(string)
-	} else {
-		selectField = append(selectField, "Note")
+	if body.Note != nil {
+		selectField = append(selectField, "note")
+		insert.Note = *body.Note
 	}
 
 	if len(selectField) == 0 {
 		return errors.New("rqeuire at least one option")
 	}
-
-	insert.ItemID = body.ItemID
-	insert.AgeLimit = *body.AgeLimit
-	insert.Location = *body.Location
-	insert.State = *body.State
-	insert.Note = *body.Note
 
 	return db.Select(
 		selectField[0], selectField[1:],

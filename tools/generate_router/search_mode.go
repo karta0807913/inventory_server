@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -15,51 +14,31 @@ type MethodSearchParams struct {
 }
 
 // default the "index" will be join as options
-func MethodSearch(arg MethodSearchParams) *TemplateRoot {
-	templateRoot := TemplateRoot{
-		FuncName:       *method,
-		StructName:     arg.ParsedType.Name,
-		Decoder:        "ShouldBindQuery",
-		RequiredFields: make([]TemplateField, 0),
-		OptionalFields: make([]TemplateField, 0),
+func MethodSearch(arg MethodSearchParams) *SearchTemplateRoot {
+	templateRoot := SearchTemplateRoot{
+		TemplateRoot: TemplateRoot{
+			FuncName:       *method,
+			StructName:     arg.ParsedType.Name,
+			Decoder:        "ShouldBindQuery",
+			RequiredFields: make([]TemplateField, 0),
+			OptionalFields: make([]TemplateField, 0),
+		},
+	}
+
+	if max_limit == nil {
+		templateRoot.MaxLimit = 20
+	} else {
+		templateRoot.MaxLimit = *max_limit
+	}
+
+	if min_limit == nil {
+		templateRoot.MinLimit = 0
+	} else {
+		templateRoot.MinLimit = *min_limit
 	}
 
 	for _, field := range arg.ParsedType.Fields {
-		tf := TemplateField{
-			Name: field.Name,
-			Type: field.Type,
-		}
-		tags := make([]string, 0)
-		decoder, ok := field.Tag.Lookup(arg.TagKey)
-		if ok {
-			tags = append(tags, fmt.Sprintf(`form:"%s"`, decoder))
-		}
-		column, ok := field.Tag.Lookup("column")
-		if ok {
-			tf.Column = column
-		} else {
-			tf.Column = underscore(field.Name)
-		}
-		gormTag, ok := field.Tag.Lookup("gorm")
-		//     16       8      4      2        1
-		// primaryKey unique index not_null default
-		//     0        0      0      0        0
-		var flag uint8 = 0
-		if ok {
-			opt := gormTag
-			if strings.Index(opt, "not null") != -1 {
-				flag |= 2
-			}
-			if strings.Index(opt, "primaryKey") != -1 {
-				flag |= 16
-			}
-			if strings.Index(opt, "index") != -1 {
-				flag |= 4
-			}
-			if strings.Index(opt, "unique") != -1 {
-				flag |= 8
-			}
-		}
+		tf, tags, flag := parseFields(field, arg.TagKey, "form")
 
 		// if this field is required
 		if arg.IgnoreSet.CheckAndDelete(field.Name) {

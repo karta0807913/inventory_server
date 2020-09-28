@@ -3,7 +3,6 @@ package main
 // create mode default every fields (without primaryKey) are required
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -28,36 +27,7 @@ func MethodCreate(arg MethodCreateParams) *TemplateRoot {
 	}
 
 	for _, field := range arg.ParsedType.Fields {
-		tf := TemplateField{
-			Name: field.Name,
-			Type: field.Type,
-		}
-		tags := make([]string, 0)
-		decoder, ok := field.Tag.Lookup(arg.TagKey)
-		if ok {
-			tags = append(tags, fmt.Sprintf(`%s:"%s"`, arg.TagKey, decoder))
-		}
-		gormTag, ok := field.Tag.Lookup("gorm")
-		//     16       8      4      2        1
-		// primaryKey unique index not_null default
-		//     0        0      0      0        0
-		var join uint8 = 0
-		if ok {
-			opt := gormTag
-			if strings.Index(opt, "not null") != -1 {
-				join |= 2
-			}
-			if strings.Index(opt, "primaryKey") != -1 {
-				join |= 16
-			}
-			if strings.Index(opt, "index") != -1 {
-				join |= 4
-			}
-			if strings.Index(opt, "unique") != -1 {
-				join |= 8
-			}
-		}
-
+		tf, tags, join := parseFields(field, arg.TagKey, arg.TagKey)
 		// if this field is required
 		if arg.IgnoreSet.CheckAndDelete(field.Name) {
 			continue

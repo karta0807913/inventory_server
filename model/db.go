@@ -18,5 +18,14 @@ func InitDB(db *gorm.DB) error {
 	if err != nil {
 		return err
 	}
+
+	err = db.AutoMigrate(&Borrower{})
+	if err != nil {
+		return err
+	}
+	err = db.AutoMigrate(&BorrowRecord{})
+	if err != nil {
+		return err
+	}
 	return nil
 }

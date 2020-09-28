@@ -12,9 +12,10 @@ type ItemState struct {
 	Discard bool `json:"discard"`
 }
 
-//go:generate go run ../tools/generate_router -type "ItemTable" -method "GET" -ignore "ID" -options "State,ItemID"
-//go:generate go run ../tools/generate_router -type "ItemTable" -method "POST" -ignore "ID"
-//go:generate go run ../tools/generate_router -type "ItemTable" -method "PUT" -ignore "ID,ItemID,Name,Date,Cost" -indexField "ItemID"
+//go:generate go run ../tools/generate_router -type "ItemTable" -method "Find" -ignore "ID,ItemID" -options "State"
+//go:generate go run ../tools/generate_router -type "ItemTable" -method "First" -ignore "ID,State" -require "ItemID"
+//go:generate go run ../tools/generate_router -type "ItemTable" -method "Create" -ignore "ID"
+//go:generate go run ../tools/generate_router -type "ItemTable" -method "Update" -ignore "ID,ItemID,Name,Date,Cost" -indexField "ItemID"
 type ItemTable struct {
 	ID       uint      `gorm:"primaryKey" json:"id"`
 	ItemID   string    `gorm:"not null;uniqueIndex" json:"item_id"`

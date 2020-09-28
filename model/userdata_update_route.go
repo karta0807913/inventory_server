@@ -9,7 +9,7 @@ import (
 
 // this file generate by go generate, please don't edit it
 // data will put into struct
-func (insert *UserData) PUT(c *gin.Context, db *gorm.DB) error {
+func (insert *UserData) Update(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
 		Password string `json:"password" binding:"required"`
 
@@ -20,21 +20,18 @@ func (insert *UserData) PUT(c *gin.Context, db *gorm.DB) error {
 	if err != nil {
 		return err
 	}
+	insert.Password = body.Password
 
 	selectField := make([]string, 0)
 
-	if body.Name == nil {
-		body.Name = new(string)
-	} else {
-		selectField = append(selectField, "Name")
+	if body.Name != nil {
+		selectField = append(selectField, "name")
+		insert.Name = *body.Name
 	}
 
 	if len(selectField) == 0 {
 		return errors.New("rqeuire at least one option")
 	}
-
-	insert.Password = body.Password
-	insert.Name = *body.Name
 
 	return db.Select(
 		selectField[0], selectField[1:],

@@ -7,7 +7,7 @@ import (
 
 // this file generate by go generate, please don't edit it
 // data will put into struct
-func (insert *ItemTable) POST(c *gin.Context, db *gorm.DB) error {
+func (insert *ItemTable) Create(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
 		ItemID   string    `json:"item_id" binding:"required"`
 		Name     string    `json:"name" binding:"required"`
@@ -25,14 +25,14 @@ func (insert *ItemTable) POST(c *gin.Context, db *gorm.DB) error {
 	}
 
 	selectField := []string{
-		"ItemID",
-		"Name",
-		"Date",
-		"AgeLimit",
-		"Cost",
-		"Location",
-		"State",
-		"Note",
+		"item_id",
+		"name",
+		"date",
+		"age_limit",
+		"cost",
+		"location",
+		"state",
+		"note",
 	}
 
 	insert.ItemID = body.ItemID

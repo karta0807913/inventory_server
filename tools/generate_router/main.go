@@ -21,13 +21,15 @@ import (
 
 var (
 	typeName   = flag.String("type", "", "type name; must be set")
-	method     = flag.String("method", "GET", "http method, default GET")
+	method     = flag.String("method", "Find", "Create, Update, Find, First")
 	prefix     = flag.String("prefix", "", "http route prefix")
 	required   = flag.String("require", "", "input required fields, default read gorm tag in struct which is not null without primaryKey and default")
 	options    = flag.String("options", "", "input options fields")
 	decoder    = flag.String("decoder", "json", "decoder: xml,json or etc")
 	ignore     = flag.String("ignore", "", "which field should ignore")
 	indexField = flag.String("indexField", "", "for an update index")
+	max_limit  = flag.Uint("max_limit", 20, "search limit")
+	min_limit  = flag.Uint("min_limit", 0, "min_limit")
 )
 
 const DocFile string = "doc.json"
@@ -66,8 +68,8 @@ func main() {
 		flag.PrintDefaults()
 		return
 	}
-	if !NewCommaSet("GET,POST,DELETE,PUT").CheckAndDelete(*method) {
-		log.Fatal("method muse in GET,POST,DELETE,PUT, but got ", *method)
+	if !NewCommaSet("Create,Update,Find,First").CheckAndDelete(*method) {
+		log.Fatal("method must either Create, Update, Find or First, but got ", *method)
 	}
 	args := flag.Args()
 	if len(args) == 0 {
@@ -82,7 +84,7 @@ func main() {
 
 	_, err := os.Stat(path.Join(rootDir, DocFile))
 	if os.IsNotExist(err) {
-		ioutil.WriteFile(path.Join(rootDir, DocFile), []byte("{}"), 0642)
+		ioutil.WriteFile(path.Join(rootDir, DocFile), []byte("{}\n"), 0642)
 	}
 	requireSet := NewCommaSet(*required)
 	optionsSet := NewCommaSet(*options)
@@ -106,7 +108,7 @@ func main() {
 	if err != nil {
 		log.Fatal("open file error ", err)
 	}
-	if *method == "POST" {
+	if *method == "Create" {
 		temp := MethodCreate(MethodCreateParams{
 			ParsedType: parsedTypes[0],
 			RequireSet: requireSet,
@@ -118,7 +120,7 @@ func main() {
 		t := template.New("").Funcs(funcMap)
 		t = template.Must(t.Parse(CreateOrUpdateTemplate))
 		t.Execute(file, temp)
-	} else if *method == "PUT" {
+	} else if *method == "Update" {
 		temp := MethodUpdate(MethodUpdateParams{
 			ParsedType: parsedTypes[0],
 			RequireSet: requireSet,
@@ -131,7 +133,7 @@ func main() {
 		t := template.New("").Funcs(funcMap)
 		t = template.Must(t.Parse(CreateOrUpdateTemplate))
 		t.Execute(file, temp)
-	} else if *method == "GET" {
+	} else if *method == "First" {
 		temp := MethodSearch(MethodSearchParams{
 			ParsedType: parsedTypes[0],
 			RequireSet: requireSet,
@@ -141,7 +143,19 @@ func main() {
 		})
 		temp.Package = parsedPKG.Name
 		t := template.New("").Funcs(funcMap)
-		t = template.Must(t.Parse(SearchTemplate))
+		t = template.Must(t.Parse(FirstTemplate))
+		t.Execute(file, temp)
+	} else if *method == "Find" {
+		temp := MethodSearch(MethodSearchParams{
+			ParsedType: parsedTypes[0],
+			RequireSet: requireSet,
+			OptionsSet: optionsSet,
+			IgnoreSet:  ignoreSet,
+			TagKey:     *decoder,
+		})
+		temp.Package = parsedPKG.Name
+		t := template.New("").Funcs(funcMap)
+		t = template.Must(t.Parse(FindTemplate))
 		t.Execute(file, temp)
 	} else {
 		log.Fatal("method not support now :<")
@@ -150,6 +164,10 @@ func main() {
 	cmd := exec.Command("go", "fmt")
 	if err := cmd.Run(); err != nil {
 		fmt.Println("can't find gofmt to format the code")
+	}
+	cmd = exec.Command("gopls", "imports", "-w", filename)
+	if err := cmd.Run(); err != nil {
+		fmt.Println("can't find gopls to import the code")
 	}
 	for key := range *requireSet {
 		if key == "" {
@@ -223,12 +241,19 @@ func parsePackage(structname []string) *Package {
 				}
 				for _, field := range structType.Fields.List {
 					tags := reflect.StructTag(strings.ReplaceAll(field.Tag.Value, "`", ""))
+					var typeStr string
+					switch t := field.Type.(type) {
+					case *ast.Ident:
+						typeStr = t.Name
+					case *ast.SelectorExpr:
+						typeStr = t.X.(*ast.Ident).Name + "." + t.Sel.Name
+					}
 					for _, name := range field.Names {
 						t.Fields = append(t.Fields, Field{
 							Name: name.Name,
 							Tag:  tags,
 							Doc:  field.Doc,
-							Type: field.Type.(*ast.Ident).Name,
+							Type: typeStr,
 						})
 					}
 				}
