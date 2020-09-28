@@ -11,7 +11,7 @@ import (
 // data will put into struct
 func (insert *UserData) PUT(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
-		Password string `json:"password" binding:"rqeuired"`
+		Password string `json:"password" binding:"required"`
 
 		Name *string `json:"nickname"`
 	}
@@ -38,5 +38,5 @@ func (insert *UserData) PUT(c *gin.Context, db *gorm.DB) error {
 
 	return db.Select(
 		selectField[0], selectField[1:],
-	).Where("Password=?", body.Password).Updates(&insert).Error
+	).Where("password=?", body.Password).Updates(&insert).Error
 }

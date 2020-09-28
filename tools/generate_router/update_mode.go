@@ -37,6 +37,12 @@ func MethodUpdate(arg MethodUpdateParams) *TemplateRoot {
 		if ok {
 			tags = append(tags, fmt.Sprintf(`%s:"%s"`, arg.TagKey, decoder))
 		}
+		column, ok := field.Tag.Lookup("column")
+		if ok {
+			tf.Column = column
+		} else {
+			tf.Column = underscore(field.Name)
+		}
 		gormTag, ok := field.Tag.Lookup("gorm")
 		//     16       8      4      2        1
 		// primaryKey unique index not_null default
@@ -96,7 +102,7 @@ func MethodUpdate(arg MethodUpdateParams) *TemplateRoot {
 	}
 	if templateRoot.IndexField != nil {
 		templateRoot.IndexField.Tag = "`" + strings.Join(
-			append(indexTags, `binding:"rqeuired"`), " ") + "`"
+			append(indexTags, `binding:"required"`), " ") + "`"
 	}
 	return &templateRoot
 }

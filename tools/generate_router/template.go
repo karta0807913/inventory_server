@@ -60,7 +60,7 @@ if body.{{ .Name }} == nil {
 {{/* create or update */}}
 return db.Select(
 selectField[0], selectField[1:],
-){{ with .IndexField }}.Where("{{.Name}}=?", body.{{.Name}}){{ end }}.{{ .Mode }}(&insert).Error
+){{ with .IndexField }}.Where("{{ .Column }}=?", body.{{.Name}}){{ end }}.{{ .Mode }}(&insert).Error
 }
 `
 
@@ -68,6 +68,9 @@ const SearchTemplate = `
 package {{ .Package }}
 
 import (
+	"errors"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -107,16 +110,22 @@ func (item *{{ .StructName }}) {{ .FuncName }}(c *gin.Context, db *gorm.DB) (*go
 {{/* put options */}}
 {{ range .OptionalFields }}
   if body.{{ .Name }} != nil {
-    whereField = append(whereField, "{{ .Name }}=?")
+    whereField = append(whereField, "{{ .Column }}=?")
     valueField = append(valueField, body.{{ .Name }})
     item.{{ .Name }} = *body.{{ .Name }}
   }
 {{ end }}
 
+{{ if eq (len .RequiredFields) 0}}
+  if len(valueField) == 0 {
+    return nil, errors.New("must have one options")
+  }
+{{ end }}
+
 {{/* return build db */}}
 return db.Where(
-whereField,{{ range .RequiredFields }}
- body.{{.Name}},{{ end }}
+strings.Join(whereField, "and"),
+valueField,
 ), nil
 }`
 
@@ -132,7 +141,8 @@ type TemplateRoot struct {
 }
 
 type TemplateField struct {
-	Name string
-	Type string
-	Tag  string
+	Name   string
+	Type   string
+	Tag    string
+	Column string
 }

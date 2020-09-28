@@ -11,7 +11,7 @@ import (
 // data will put into struct
 func (insert *ItemTable) PUT(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
-		ItemID string `json:"item_id" binding:"rqeuired"`
+		ItemID string `json:"item_id" binding:"required"`
 
 		AgeLimit *uint      `json:"age_limit"`
 		Location *string    `json:"location"`
@@ -62,5 +62,5 @@ func (insert *ItemTable) PUT(c *gin.Context, db *gorm.DB) error {
 
 	return db.Select(
 		selectField[0], selectField[1:],
-	).Where("ItemID=?", body.ItemID).Updates(&insert).Error
+	).Where("item_id=?", body.ItemID).Updates(&insert).Error
 }

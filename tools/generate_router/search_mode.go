@@ -32,10 +32,13 @@ func MethodSearch(arg MethodSearchParams) *TemplateRoot {
 		tags := make([]string, 0)
 		decoder, ok := field.Tag.Lookup(arg.TagKey)
 		if ok {
-			t := strings.Split(decoder, ":")
-			if len(t) > 1 {
-				tags = append(tags, fmt.Sprintf(`form:"%s"`, arg.TagKey, decoder))
-			}
+			tags = append(tags, fmt.Sprintf(`form:"%s"`, decoder))
+		}
+		column, ok := field.Tag.Lookup("column")
+		if ok {
+			tf.Column = column
+		} else {
+			tf.Column = underscore(field.Name)
 		}
 		gormTag, ok := field.Tag.Lookup("gorm")
 		//     16       8      4      2        1

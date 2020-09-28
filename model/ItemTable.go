@@ -12,7 +12,7 @@ type ItemState struct {
 	Discard bool `json:"discard"`
 }
 
-//go:generate go run ../tools/generate_router -type "ItemTable" -method "GET" -ignore "ID"
+//go:generate go run ../tools/generate_router -type "ItemTable" -method "GET" -ignore "ID" -options "State,ItemID"
 //go:generate go run ../tools/generate_router -type "ItemTable" -method "POST" -ignore "ID"
 //go:generate go run ../tools/generate_router -type "ItemTable" -method "PUT" -ignore "ID,ItemID,Name,Date,Cost" -indexField "ItemID"
 type ItemTable struct {
@@ -23,7 +23,7 @@ type ItemTable struct {
 	AgeLimit uint      `gorm:"not null" json:"age_limit"`
 	Cost     uint      `gorm:"not null" json:"cost"`
 	Location string    `gorm:"not null" json:"location"`
-	State    ItemState `gorm:"not null;type:INT" json:"state"`
+	State    ItemState `gorm:"not null;type:INT;index" json:"state"`
 	Note     string    `gorm:"not null" json:"note"`
 }
 

@@ -1,8 +1,8 @@
 package router
 
 import (
-	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/karta0807913/inventory_server/model"
@@ -13,75 +13,47 @@ func ApiRouter(config RouterConfig) {
 	router := config.Router
 
 	router.GET("/item", func(c *gin.Context) {
-		itemID, ok := c.GetQuery("item_id")
-		if !ok {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"message": "item_id missing",
-			})
-			return
+		var item model.ItemTable
+		search, err := item.GET(c, db)
+
+		if err == nil {
+			err = search.First(&item).Error
+			if err != nil {
+				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+					"message": "item not found",
+				})
+				return
+			}
+			c.JSON(200, item)
+		} else {
+			var max_limit = 20
+			var limit int = max_limit
+			slimit, ok := c.GetQuery("limit")
+			if ok {
+				limit, err = strconv.Atoi(slimit)
+				if err != nil {
+					limit = max_limit
+				} else {
+					if limit <= 0 || max_limit < limit {
+						limit = max_limit
+					}
+				}
+			}
+			var item []model.ItemTable
+			err = db.Limit(limit).Find(&item).Error
+			if err != nil {
+				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+					"message": "item not found",
+				})
+				return
+			}
+			c.JSON(200, item)
 		}
-		item := model.ItemTable{}
-		err := db.First(&item, "item_id=?", itemID).Error
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"message": "item not found",
-			})
-			return
-		}
-		c.JSON(http.StatusOK, item)
 	})
 
 	router.PUT("/item", func(c *gin.Context) {
-		type Body struct {
-			ItemID   string           `json:"item_id" binding:"required"`
-			Location *string          `json:"location"`
-			State    *model.ItemState `json:"state"`
-			Note     *string          `json:"note"`
-		}
-		var body Body
-		err := c.ShouldBindJSON(&body)
-		if err != nil {
-			log.Println(err)
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"message": "format error",
-			})
-			return
-		}
-		selectDB := db
-		flag := false
-		Select := make([]string, 0)
-		if body.Location != nil {
-			Select = append(Select, "Location")
-			flag = true
-		} else {
-			body.Location = new(string)
-		}
-		if body.State != nil {
-			Select = append(Select, "State")
-			flag = true
-		} else {
-			body.State = &model.ItemState{}
-		}
-		if body.Note != nil {
-			Select = append(Select, "Note")
-			flag = true
-		} else {
-			body.Note = new(string)
-		}
-		if !flag {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"message": "must contain one of location and state",
-			})
-			return
-		}
-		err = selectDB.Select(
-			Select[0],
-			Select[1:],
-		).Where("item_id=?", body.ItemID).Updates(&model.ItemTable{
-			State:    *body.State,
-			Location: *body.Location,
-			Note:     *body.Note,
-		}).Error
+		var table model.ItemTable
+		err := table.PUT(c, db)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{
 				"message": "update item error",

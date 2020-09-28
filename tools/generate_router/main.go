@@ -12,6 +12,7 @@ import (
 	"path"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"strings"
 	"text/template"
 
@@ -37,6 +38,25 @@ func isDir(name string) bool {
 		log.Fatal(err)
 	}
 	return info.IsDir()
+}
+
+var camel = regexp.MustCompile("(^[^A-Z]*|[A-Z]*)([A-Z][^A-Z]+|$)")
+
+func underscore(s string) string {
+	var a []string
+	for _, sub := range camel.FindAllStringSubmatch(s, -1) {
+		if sub[1] != "" {
+			a = append(a, sub[1])
+		}
+		if sub[2] != "" {
+			a = append(a, sub[2])
+		}
+	}
+	return strings.ToLower(strings.Join(a, "_"))
+}
+
+var funcMap template.FuncMap = template.FuncMap{
+	"underscore": underscore,
 }
 
 func main() {
@@ -95,7 +115,7 @@ func main() {
 			TagKey:     *decoder,
 		})
 		temp.Package = parsedPKG.Name
-		t := template.New("")
+		t := template.New("").Funcs(funcMap)
 		t = template.Must(t.Parse(CreateOrUpdateTemplate))
 		t.Execute(file, temp)
 	} else if *method == "PUT" {
@@ -108,7 +128,7 @@ func main() {
 			TagKey:     *decoder,
 		})
 		temp.Package = parsedPKG.Name
-		t := template.New("")
+		t := template.New("").Funcs(funcMap)
 		t = template.Must(t.Parse(CreateOrUpdateTemplate))
 		t.Execute(file, temp)
 	} else if *method == "GET" {
@@ -120,7 +140,7 @@ func main() {
 			TagKey:     *decoder,
 		})
 		temp.Package = parsedPKG.Name
-		t := template.New("")
+		t := template.New("").Funcs(funcMap)
 		t = template.Must(t.Parse(SearchTemplate))
 		t.Execute(file, temp)
 	} else {

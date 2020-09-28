@@ -1,6 +1,9 @@
 package model
 
 import (
+	"errors"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -9,7 +12,8 @@ import (
 // search options will put into struct
 func (item *ItemTable) GET(c *gin.Context, db *gorm.DB) (*gorm.DB, error) {
 	type Body struct {
-		ItemID *string ``
+		ItemID *string    `form:"item_id"`
+		State  *ItemState `form:"state"`
 	}
 	var body Body
 	err := c.ShouldBindQuery(&body)
@@ -21,12 +25,23 @@ func (item *ItemTable) GET(c *gin.Context, db *gorm.DB) (*gorm.DB, error) {
 	valueField := make([]interface{}, 0)
 
 	if body.ItemID != nil {
-		whereField = append(whereField, "ItemID=?")
+		whereField = append(whereField, "item_id=?")
 		valueField = append(valueField, body.ItemID)
 		item.ItemID = *body.ItemID
 	}
 
+	if body.State != nil {
+		whereField = append(whereField, "state=?")
+		valueField = append(valueField, body.State)
+		item.State = *body.State
+	}
+
+	if len(valueField) == 0 {
+		return nil, errors.New("must have one options")
+	}
+
 	return db.Where(
-		whereField,
+		strings.Join(whereField, "and"),
+		valueField,
 	), nil
 }
