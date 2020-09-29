@@ -28,22 +28,22 @@ func (insert *ItemTable) Update(c *gin.Context, db *gorm.DB) error {
 	selectField := make([]string, 0)
 
 	if body.AgeLimit != nil {
-		selectField = append(selectField, "age_limit")
+		selectField = append(selectField, "item_tables.age_limit")
 		insert.AgeLimit = *body.AgeLimit
 	}
 
 	if body.Location != nil {
-		selectField = append(selectField, "location")
+		selectField = append(selectField, "item_tables.location")
 		insert.Location = *body.Location
 	}
 
 	if body.State != nil {
-		selectField = append(selectField, "state")
+		selectField = append(selectField, "item_tables.state")
 		insert.State = *body.State
 	}
 
 	if body.Note != nil {
-		selectField = append(selectField, "note")
+		selectField = append(selectField, "item_tables.note")
 		insert.Note = *body.Note
 	}
 
@@ -53,5 +53,5 @@ func (insert *ItemTable) Update(c *gin.Context, db *gorm.DB) error {
 
 	return db.Select(
 		selectField[0], selectField[1:],
-	).Where("item_id=?", body.ItemID).Updates(&insert).Error
+	).Where("item_tables.item_id=?", body.ItemID).Updates(&insert).Error
 }

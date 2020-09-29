@@ -21,7 +21,7 @@ func (item *ItemTable) Find(c *gin.Context, db *gorm.DB) ([]ItemTable, error) {
 	valueField := make([]interface{}, 0)
 
 	if body.State != nil {
-		whereField = append(whereField, "state=?")
+		whereField = append(whereField, "item_tables.state=?")
 		valueField = append(valueField, body.State)
 		item.State = *body.State
 	}

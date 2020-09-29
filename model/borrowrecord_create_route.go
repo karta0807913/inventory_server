@@ -12,12 +12,12 @@ import (
 // data will put into struct
 func (insert *BorrowRecord) Create(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
-		BorrowerID uint      `json:"borrower_id" binding:"required"`
 		BorrowDate time.Time `json:"borrow_date" binding:"required"`
 		ReplyDate  time.Time `json:"reply_date" binding:"required"`
-		Note       string    `json:"note" binding:"required"`
 
-		Borrower *Borrower `json:"borrower"`
+		Borrower   *Borrower `json:"borrower"`
+		BorrowerID *uint     `json:"borrower_id"`
+		Note       *string   `json:"note"`
 	}
 	var body Body
 	err := c.ShouldBindJSON(&body)
@@ -26,25 +26,31 @@ func (insert *BorrowRecord) Create(c *gin.Context, db *gorm.DB) error {
 	}
 
 	selectField := []string{
-		"borrower_id",
-		"borrow_date",
-		"reply_date",
-		"note",
+		"borrow_records.borrow_date",
+		"borrow_records.reply_date",
 	}
 
 	if body.Borrower != nil {
-		selectField = append(selectField, "borrower")
+		selectField = append(selectField, "borrow_records.borrower")
 		insert.Borrower = *body.Borrower
 	}
 
-	if len(selectField) == 4 {
+	if body.BorrowerID != nil {
+		selectField = append(selectField, "borrow_records.borrower_id")
+		insert.BorrowerID = *body.BorrowerID
+	}
+
+	if body.Note != nil {
+		selectField = append(selectField, "borrow_records.note")
+		insert.Note = *body.Note
+	}
+
+	if len(selectField) == 2 {
 		return errors.New("rqeuire at least one option")
 	}
 
-	insert.BorrowerID = body.BorrowerID
 	insert.BorrowDate = body.BorrowDate
 	insert.ReplyDate = body.ReplyDate
-	insert.Note = body.Note
 
 	return db.Select(
 		selectField[0], selectField[1:],

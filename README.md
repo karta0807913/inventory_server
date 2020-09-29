@@ -2,6 +2,7 @@
 
 ### POST `/login`
 
+* 登入
 * header
 `Content-Type: application/json`
 
@@ -22,6 +23,7 @@
 
 ### POST `/sign_up`
 
+* 註冊
 * header
 `Content-Type: application/json`
 
@@ -43,11 +45,20 @@
 
 ### GET `/api/item`
 
+* 取得財產
 * query
+* note: 如沒有參數則回復全部
 
-| 參數    | 型別   | 備註                         |
-| ------- | ------ | ---------------------------- |
-| item_id | string | 財產編號，例如3111401-47-3-3 |
+| 參數          | 型別    | 必須   | 備註                         |
+| -------       | ------  | ------ | ---------------------------- |
+| item_id       | string  | 否     | 財產編號，例如3111401-47-3-3 |
+| state         | Object  | 否     | 財產狀態                     |
+| state.correct | boolean | -      | 符合                         |
+| state.discard | boolean | -      | 報廢                         |
+| state.fixing  | boolean | -      | 送修                         |
+| state.unlabel | boolean | -      | 標籤未貼                     |
+| limit         | number  | 否     | 需要幾筆，預設20筆           |
+| offset        | number  | 否     | offset                       |
 
 * error code
 
@@ -56,6 +67,7 @@
 | 400         | 參數或是item not found |
 
 * success reply
+* note: 在定義`item_id`的時候為object，其他情況為array
 
 ```
 {
@@ -78,18 +90,22 @@
 
 ### PUT `/api/item`
 
+* 更新財產詳細資料
 * body 
+* header
+`Content-Type: application/json`
+* note: 可選必須至少一項
 
-| 參數          | 型別    | 備註             |
-| ------------- | ------- | ---------------- |
-| item_id       | string  | 財產編號         |
-| location      | string  | 擺放位置（可選） |
-| note          | string  | 備註（可選）     |
-| state         | object  | 自盤結果（可選） |
-| state.correct | boolean | 符合             |
-| state.discard | boolean | 報修             |
-| state.fixing  | boolean | 送修             |
-| state.unlabel | boolean | 標籤未貼         |
+| 參數          | 型別    | 必須  | 備註             |
+| ------------- | ------- | ----- | ---------------- |
+| item_id       | string  | 是    | 財產編號         |
+| location      | string  | 否    | 擺放位置（可選） |
+| note          | string  | 否    | 備註（可選）     |
+| state         | object  | 否    | 自盤結果（可選） |
+| state.correct | boolean | -     | 符合             |
+| state.discard | boolean | -     | 報修             |
+| state.fixing  | boolean | -     | 送修             |
+| state.unlabel | boolean | -     | 標籤未貼         |
 
 * error code
 
@@ -103,3 +119,183 @@
 ```
 {}
 ```
+
+### POST `/api/borrower`
+
+* 新增借出人
+* body 
+* header
+`Content-Type: application/json`
+
+| 參數    | 型別   | 必須   | 備註                         |
+| ------- | ------ | ------ | ---------------------------- |
+| name    | string | 是     | 借出人名子                   |
+| phone   | string | 是     | 借出人手機                   |
+
+* error code
+
+| Status Code | 備註                   |
+| ----------- | ---------------------- |
+| 502         | 資料庫更新失敗         |
+
+
+* success reply
+
+```
+{
+  "id": 1, 
+  "name": "User1", 
+  "phone": "09122345678"
+}
+```
+
+### GET `/api/borrower`
+
+* 取得借出人資料
+* query
+* note: 如沒有參數則回復全部
+
+| 參數    | 型別   | 必須   | 備註                         |
+| ------- | ------ | ------ | ---------------------------- |
+| id      | number | 否     | 借出人ID                     |
+| phone   | string | 否     | 借出人手機                   |
+| name    | string | 否     | 借出人名稱                   |
+| limit   | number | 否     | 需要幾筆，預設20筆           |
+| offset  | number | 否     | offset                       |
+
+* error code
+
+| Status Code | 備註                   |
+| ----------- | ---------------------- |
+| 400         | 參數或是item not found |
+
+* success reply
+* note: 在定義`item_id`的時候為object，其他情況為array
+
+```
+{
+  "id": 1, 
+  "name": "User1", 
+  "phone": "09122345678"
+}
+```
+
+### PUT `/api/item`
+
+* 更新借出人詳細資料
+* body 
+* header
+`Content-Type: application/json`
+* note: 可選必須至少一項
+
+| 參數          | 型別    | 必須  | 備註             |
+| ------------- | ------- | ----- | ---------------- |
+| phone         | string  | 否    | 借出人手機       |
+| name          | string  | 否    | 借出人名稱       |
+
+* error code
+
+| Status Code | 備註                   |
+| ----------- | ---------------------- |
+| 400         | 參數或是item not found |
+| 502         | 資料庫更新失敗         |
+
+* success reply
+
+```
+{}
+```
+
+### GET `/api/borrow_record`
+
+* 取得借出紀錄資料
+* query
+* note: 如沒有參數則回復全部
+
+| 參數    | 型別   | 必須   | 備註                         |
+| ------- | ------ | ------ | ---------------------------- |
+| id      | number | 否     | 借出紀錄id                   |
+| limit   | number | 否     | 需要幾筆，預設20筆           |
+| offset  | number | 否     | offset                       |
+
+* error code
+
+| Status Code | 備註                   |
+| ----------- | ---------------------- |
+| 400         | 參數或是item not found |
+
+* success reply
+* note: 在定義`id`的時候為object，其他情況為array
+
+```
+{
+  "borrow_date": "2020-09-29T15:49:54.236129179+08:00", 
+  "borrower_id": 1, 
+  "id": 1, 
+  "note": "", 
+  "reply_date": "0001-01-01T00:00:00Z"
+}
+```
+
+```
+[
+  {
+    "borrow_date": "2020-09-29T19:12:12.177418328+08:00", 
+    "borrower": {
+      "id": 1, 
+      "name": "User1", 
+      "phone": "09122345678"
+    }, 
+    "borrower_id": 1, 
+    "id": 1, 
+    "note": "", 
+    "reply_date": "0001-01-01T00:00:00Z", 
+    "returned": false
+  }
+]
+```
+
+### PUT `/api/borrow_record`
+
+* 更新借出紀錄資料
+* body 
+* header
+`Content-Type: application/json`
+* note: 可選必須至少一項
+
+| 參數        | 型別   | 必須   | 備註                         |
+| -------     | ------ | ------ | ---------------------------- |
+| borrower_id | number | 否     | 更換借貸人                   |
+| reply_date  | date   | 否     | 歸還時間                     |
+| returned    | bool   | 否     | 是否歸還                     |
+| note        | string | 否     | 備註                         |
+
+* error code
+
+| Status Code | 備註                   |
+| ----------- | ---------------------- |
+| 400         | 參數或是item not found |
+| 502         | 資料庫更新失敗         |
+
+* success reply
+
+```
+{}
+```
+
+### POST `/api/borrow_record`
+
+* 新增借貸紀錄
+* body 
+* header
+`Content-Type: application/json`
+* note: 如果定義了 Borrower, 則不用定義 BorrowerID, 相反則同，
+定義Borrower會新增一個Borrower物件
+
+| 參數        | 型別   | 必須   | 備註                          |
+| -------     | ------ | ------ | ----------------------------  |
+| borrow_date | string | 是     | 借貸時間                      |
+| reply_date  | string | 是     | 歸還時間                      |
+| note        | string | 否     | 備註                          |
+| borrower    | Object | 否     | 借貸人物件，與/api/borrower同 |
+| borrower_id | number | 否     | 借貸人ID                      |

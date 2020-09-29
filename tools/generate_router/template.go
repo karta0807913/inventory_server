@@ -8,6 +8,8 @@ import (
 const CreateOrUpdateTemplate = `
 package {{ .Package }}
 
+{{ $StructName := (print .StructName "s") }}
+
 // this file generate by go generate, please don't edit it
 // data will put into struct
 func (insert *{{ .StructName }}){{ .FuncName }}(c *gin.Context, db *gorm.DB) error {
@@ -28,7 +30,7 @@ func (insert *{{ .StructName }}){{ .FuncName }}(c *gin.Context, db *gorm.DB) err
     {{/* select array */}}
     {{ if ne (len .RequiredFields) 0}}
       selectField := []string {
-        {{ range .RequiredFields }}"{{ .Column }}",
+        {{ range .RequiredFields }}"{{ underscore $StructName }}.{{ .Column }}",
         {{ end }}
       }
     {{ else }}
@@ -38,7 +40,7 @@ func (insert *{{ .StructName }}){{ .FuncName }}(c *gin.Context, db *gorm.DB) err
     {{/* put options */}}
     {{ range .OptionalFields }}
       if body.{{ .Name }} != nil {
-        selectField = append(selectField, "{{ .Column }}")
+        selectField = append(selectField, "{{ underscore $StructName }}.{{ .Column }}")
         insert.{{ .Name }} = *body.{{ .Name }}
       }
     {{ end }}
@@ -57,12 +59,14 @@ func (insert *{{ .StructName }}){{ .FuncName }}(c *gin.Context, db *gorm.DB) err
     {{/* create or update */}}
     return db.Select(
     selectField[0], selectField[1:],
-    ){{ with .IndexField }}.Where("{{ .Column }}=?", body.{{.Name}}){{ end }}.{{ .Mode }}(&insert).Error
+    ){{ with .IndexField }}.Where("{{ underscore $StructName }}.{{ .Column }}=?", body.{{.Name}}){{ end }}.{{ .Mode }}(&insert).Error
 }
 `
 
 const FirstTemplate = `
 package {{ .Package }}
+
+{{ $StructName := (print .StructName "s") }}
 
 // this file generate by go generate, please don't edit it
 // search options will put into struct
@@ -82,7 +86,7 @@ func (item *{{ .StructName }}) {{ .FuncName }}(c *gin.Context, db *gorm.DB) erro
     {{/* if decode success, search the specific data */}}
     {{ if ne (len .RequiredFields) 0}}
       whereField := []string {
-        {{ range .RequiredFields }}"{{ .Column }}=?",
+        {{ range .RequiredFields }}"{{ underscore $StructName }}.{{ .Column }}=?",
         {{ end }}
       }
       valueField := []interface{}{
@@ -100,7 +104,7 @@ func (item *{{ .StructName }}) {{ .FuncName }}(c *gin.Context, db *gorm.DB) erro
     {{/* put options */}}
     {{ range .OptionalFields }}
       if body.{{ .Name }} != nil {
-        whereField = append(whereField, "{{ .Column }}=?")
+        whereField = append(whereField, "{{ underscore $StructName }}.{{ .Column }}=?")
         valueField = append(valueField, body.{{ .Name }})
         item.{{ .Name }} = *body.{{ .Name }}
       }
@@ -123,6 +127,8 @@ func (item *{{ .StructName }}) {{ .FuncName }}(c *gin.Context, db *gorm.DB) erro
 const FindTemplate = `
 package {{ .Package }}
 
+{{ $StructName := (print .StructName "s") }}
+
 // this file generate by go generate, please don't edit it
 // search options will put into struct
 func (item *{{ .StructName }}) {{ .FuncName }}(c *gin.Context, db *gorm.DB) ([]{{ .StructName }}, error) {
@@ -138,7 +144,7 @@ func (item *{{ .StructName }}) {{ .FuncName }}(c *gin.Context, db *gorm.DB) ([]{
     {{/* if decode success, search the specific data */}}
     {{ if ne (len .RequiredFields) 0}}
       whereField := []string {
-        {{ range .RequiredFields }}"{{ .Column }}=?",
+        {{ range .RequiredFields }}"{{ underscore $StructName }}.{{ .Column }}=?",
         {{ end }}
       }
       valueField := []interface{}{
@@ -155,7 +161,7 @@ func (item *{{ .StructName }}) {{ .FuncName }}(c *gin.Context, db *gorm.DB) ([]{
     {{/* put options */}}
     {{ range .OptionalFields }}
       if body.{{ .Name }} != nil {
-        whereField = append(whereField, "{{ .Column }}=?")
+        whereField = append(whereField, "{{ underscore $StructName }}.{{ .Column }}=?")
         valueField = append(valueField, body.{{ .Name }})
         item.{{ .Name }} = *body.{{ .Name }}
       }

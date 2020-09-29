@@ -18,6 +18,7 @@ func (insert *BorrowRecord) Update(c *gin.Context, db *gorm.DB) error {
 		BorrowDate *time.Time `json:"borrow_date"`
 		ReplyDate  *time.Time `json:"reply_date"`
 		Note       *string    `json:"note"`
+		Returned   *bool      `json:"returned"`
 	}
 	var body Body
 	err := c.ShouldBindJSON(&body)
@@ -29,23 +30,28 @@ func (insert *BorrowRecord) Update(c *gin.Context, db *gorm.DB) error {
 	selectField := make([]string, 0)
 
 	if body.BorrowerID != nil {
-		selectField = append(selectField, "borrower_id")
+		selectField = append(selectField, "borrow_records.borrower_id")
 		insert.BorrowerID = *body.BorrowerID
 	}
 
 	if body.BorrowDate != nil {
-		selectField = append(selectField, "borrow_date")
+		selectField = append(selectField, "borrow_records.borrow_date")
 		insert.BorrowDate = *body.BorrowDate
 	}
 
 	if body.ReplyDate != nil {
-		selectField = append(selectField, "reply_date")
+		selectField = append(selectField, "borrow_records.reply_date")
 		insert.ReplyDate = *body.ReplyDate
 	}
 
 	if body.Note != nil {
-		selectField = append(selectField, "note")
+		selectField = append(selectField, "borrow_records.note")
 		insert.Note = *body.Note
+	}
+
+	if body.Returned != nil {
+		selectField = append(selectField, "borrow_records.returned")
+		insert.Returned = *body.Returned
 	}
 
 	if len(selectField) == 0 {
@@ -54,5 +60,5 @@ func (insert *BorrowRecord) Update(c *gin.Context, db *gorm.DB) error {
 
 	return db.Select(
 		selectField[0], selectField[1:],
-	).Where("id=?", body.ID).Updates(&insert).Error
+	).Where("borrow_records.id=?", body.ID).Updates(&insert).Error
 }

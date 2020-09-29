@@ -3,7 +3,6 @@ package model
 import (
 	"errors"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -11,11 +10,11 @@ import (
 
 // this file generate by go generate, please don't edit it
 // search options will put into struct
-func (item *BorrowRecord) First(c *gin.Context, db *gorm.DB) error {
+func (item *Borrower) First(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
-		ID        *uint      `form:"id"`
-		ReplyDate *time.Time `form:"reply_date"`
-		Returned  *bool      `form:"returned"`
+		ID    *uint   `form:"id"`
+		Name  *string `form:"name"`
+		Phone *string `form:"phone"`
 	}
 
 	var body Body
@@ -28,21 +27,21 @@ func (item *BorrowRecord) First(c *gin.Context, db *gorm.DB) error {
 	valueField := make([]interface{}, 0)
 
 	if body.ID != nil {
-		whereField = append(whereField, "borrow_records.id=?")
+		whereField = append(whereField, "borrowers.id=?")
 		valueField = append(valueField, body.ID)
 		item.ID = *body.ID
 	}
 
-	if body.ReplyDate != nil {
-		whereField = append(whereField, "borrow_records.reply_date=?")
-		valueField = append(valueField, body.ReplyDate)
-		item.ReplyDate = *body.ReplyDate
+	if body.Name != nil {
+		whereField = append(whereField, "borrowers.name=?")
+		valueField = append(valueField, body.Name)
+		item.Name = *body.Name
 	}
 
-	if body.Returned != nil {
-		whereField = append(whereField, "borrow_records.returned=?")
-		valueField = append(valueField, body.Returned)
-		item.Returned = *body.Returned
+	if body.Phone != nil {
+		whereField = append(whereField, "borrowers.phone=?")
+		valueField = append(valueField, body.Phone)
+		item.Phone = *body.Phone
 	}
 
 	if len(valueField) == 0 {

@@ -21,7 +21,7 @@ func (item *ItemTable) First(c *gin.Context, db *gorm.DB) error {
 	}
 
 	whereField := []string{
-		"item_id=?",
+		"item_tables.item_id=?",
 	}
 	valueField := []interface{}{
 		body.ItemID,

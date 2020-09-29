@@ -26,12 +26,12 @@ func (insert *Borrower) Update(c *gin.Context, db *gorm.DB) error {
 	selectField := make([]string, 0)
 
 	if body.Name != nil {
-		selectField = append(selectField, "name")
+		selectField = append(selectField, "borrowers.name")
 		insert.Name = *body.Name
 	}
 
 	if body.Phone != nil {
-		selectField = append(selectField, "phone")
+		selectField = append(selectField, "borrowers.phone")
 		insert.Phone = *body.Phone
 	}
 
@@ -41,5 +41,5 @@ func (insert *Borrower) Update(c *gin.Context, db *gorm.DB) error {
 
 	return db.Select(
 		selectField[0], selectField[1:],
-	).Where("id=?", body.ID).Updates(&insert).Error
+	).Where("borrowers.id=?", body.ID).Updates(&insert).Error
 }
