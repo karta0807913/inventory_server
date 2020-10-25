@@ -30,7 +30,7 @@ func (insert *{{ .StructName }}){{ .FuncName }}(c *gin.Context, db *gorm.DB) err
     {{/* select array */}}
     {{ if ne (len .RequiredFields) 0}}
       selectField := []string {
-        {{ range .RequiredFields }}"{{ underscore $StructName }}.{{ .Column }}",
+        {{ range .RequiredFields }}"{{ .Column }}",
         {{ end }}
       }
     {{ else }}
@@ -40,7 +40,7 @@ func (insert *{{ .StructName }}){{ .FuncName }}(c *gin.Context, db *gorm.DB) err
     {{/* put options */}}
     {{ range .OptionalFields }}
       if body.{{ .Name }} != nil {
-        selectField = append(selectField, "{{ underscore $StructName }}.{{ .Column }}")
+        selectField = append(selectField, "{{ .Column }}")
         insert.{{ .Name }} = *body.{{ .Name }}
       }
     {{ end }}

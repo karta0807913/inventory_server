@@ -19,8 +19,8 @@ func (insert *Borrower) Create(c *gin.Context, db *gorm.DB) error {
 	}
 
 	selectField := []string{
-		"borrowers.name",
-		"borrowers.phone",
+		"name",
+		"phone",
 	}
 
 	insert.Name = body.Name

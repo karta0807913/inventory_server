@@ -26,22 +26,22 @@ func (insert *BorrowRecord) Create(c *gin.Context, db *gorm.DB) error {
 	}
 
 	selectField := []string{
-		"borrow_records.borrow_date",
-		"borrow_records.reply_date",
+		"borrow_date",
+		"reply_date",
 	}
 
 	if body.Borrower != nil {
-		selectField = append(selectField, "borrow_records.borrower")
+		selectField = append(selectField, "borrower")
 		insert.Borrower = *body.Borrower
 	}
 
 	if body.BorrowerID != nil {
-		selectField = append(selectField, "borrow_records.borrower_id")
+		selectField = append(selectField, "borrower_id")
 		insert.BorrowerID = *body.BorrowerID
 	}
 
 	if body.Note != nil {
-		selectField = append(selectField, "borrow_records.note")
+		selectField = append(selectField, "note")
 		insert.Note = *body.Note
 	}
 

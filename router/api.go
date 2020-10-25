@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -101,9 +100,6 @@ func ApiRouter(config RouterConfig) {
 			result = borrower
 		} else {
 			result, err = borrower.Find(c, db.Joins("Borrower"))
-			fmt.Println("A")
-			fmt.Println(len(result.([]model.BorrowRecord)))
-			fmt.Println(result)
 		}
 		if err != nil {
 			log.Printf("search got error %s\n", err)

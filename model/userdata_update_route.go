@@ -25,7 +25,7 @@ func (insert *UserData) Update(c *gin.Context, db *gorm.DB) error {
 	selectField := make([]string, 0)
 
 	if body.Name != nil {
-		selectField = append(selectField, "user_datas.name")
+		selectField = append(selectField, "name")
 		insert.Name = *body.Name
 	}
 

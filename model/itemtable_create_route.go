@@ -25,14 +25,14 @@ func (insert *ItemTable) Create(c *gin.Context, db *gorm.DB) error {
 	}
 
 	selectField := []string{
-		"item_tables.item_id",
-		"item_tables.name",
-		"item_tables.date",
-		"item_tables.age_limit",
-		"item_tables.cost",
-		"item_tables.location",
-		"item_tables.state",
-		"item_tables.note",
+		"item_id",
+		"name",
+		"date",
+		"age_limit",
+		"cost",
+		"location",
+		"state",
+		"note",
 	}
 
 	insert.ItemID = body.ItemID

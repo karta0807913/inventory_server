@@ -30,27 +30,27 @@ func (insert *BorrowRecord) Update(c *gin.Context, db *gorm.DB) error {
 	selectField := make([]string, 0)
 
 	if body.BorrowerID != nil {
-		selectField = append(selectField, "borrow_records.borrower_id")
+		selectField = append(selectField, "borrower_id")
 		insert.BorrowerID = *body.BorrowerID
 	}
 
 	if body.BorrowDate != nil {
-		selectField = append(selectField, "borrow_records.borrow_date")
+		selectField = append(selectField, "borrow_date")
 		insert.BorrowDate = *body.BorrowDate
 	}
 
 	if body.ReplyDate != nil {
-		selectField = append(selectField, "borrow_records.reply_date")
+		selectField = append(selectField, "reply_date")
 		insert.ReplyDate = *body.ReplyDate
 	}
 
 	if body.Note != nil {
-		selectField = append(selectField, "borrow_records.note")
+		selectField = append(selectField, "note")
 		insert.Note = *body.Note
 	}
 
 	if body.Returned != nil {
-		selectField = append(selectField, "borrow_records.returned")
+		selectField = append(selectField, "returned")
 		insert.Returned = *body.Returned
 	}
 

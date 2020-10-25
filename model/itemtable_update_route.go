@@ -28,22 +28,22 @@ func (insert *ItemTable) Update(c *gin.Context, db *gorm.DB) error {
 	selectField := make([]string, 0)
 
 	if body.AgeLimit != nil {
-		selectField = append(selectField, "item_tables.age_limit")
+		selectField = append(selectField, "age_limit")
 		insert.AgeLimit = *body.AgeLimit
 	}
 
 	if body.Location != nil {
-		selectField = append(selectField, "item_tables.location")
+		selectField = append(selectField, "location")
 		insert.Location = *body.Location
 	}
 
 	if body.State != nil {
-		selectField = append(selectField, "item_tables.state")
+		selectField = append(selectField, "state")
 		insert.State = *body.State
 	}
 
 	if body.Note != nil {
-		selectField = append(selectField, "item_tables.note")
+		selectField = append(selectField, "note")
 		insert.Note = *body.Note
 	}
 
