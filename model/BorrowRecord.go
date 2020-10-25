@@ -7,10 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//go:generate go run ../tools/generate_router -type "BorrowRecord" -method "Find" -ignore "Borrower,ID,BorrowDate,ReplyDate"
-//go:generate go run ../tools/generate_router -type "BorrowRecord" -method "First" -ignore "Borrower,BorrowDate"
-//go:generate go run ../tools/generate_router -type "BorrowRecord" -method "Create" -options "Borrower,BorrowerID,Note" -ignore "Returned"
-//go:generate go run ../tools/generate_router -type "BorrowRecord" -method "Update" -ignore "Borrower"
+//go:generate generate_router -type "BorrowRecord" -method "Find" -ignore "Borrower,ID,BorrowDate,ReplyDate"
+//go:generate generate_router -type "BorrowRecord" -method "First" -ignore "Borrower,BorrowDate"
+//go:generate generate_router -type "BorrowRecord" -method "Create" -options "Borrower,BorrowerID,Note" -ignore "Returned"
+//go:generate generate_router -type "BorrowRecord" -method "Update" -ignore "Borrower"
 type BorrowRecord struct {
 	Borrower   Borrower  `json:"borrower" gorm:"foreignKey:borrower_id"`
 	ID         uint      `gorm:"primaryKey" json:"id"`

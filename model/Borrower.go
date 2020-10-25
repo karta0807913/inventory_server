@@ -1,9 +1,9 @@
 package model
 
-//go:generate go run ../tools/generate_router -type "Borrower" -method "Update"
-//go:generate go run ../tools/generate_router -type "Borrower" -method "Create"
-//go:generate go run ../tools/generate_router -type "Borrower" -method "First"
-//go:generate go run ../tools/generate_router -type "Borrower" -method "Find" -ignore "ID"
+//go:generate generate_router -type "Borrower" -method "Update"
+//go:generate generate_router -type "Borrower" -method "Create"
+//go:generate generate_router -type "Borrower" -method "First"
+//go:generate generate_router -type "Borrower" -method "Find" -ignore "ID"
 type Borrower struct {
 	ID    uint   `gorm:"primaryKey" json:"id"`
 	Name  string `json:"name" gorm:"not null;index"`

@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/karta0807913/go_server_utils/serverutil"
 	"github.com/karta0807913/inventory_server/model"
-	"github.com/karta0807913/inventory_server/serverutil"
 )
 
 func saltPassword(str string) string {

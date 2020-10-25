@@ -11,8 +11,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/assert/v2"
+	"github.com/karta0807913/go_server_utils/serverutil"
 	"github.com/karta0807913/inventory_server/model"
-	"github.com/karta0807913/inventory_server/serverutil"
 	"gorm.io/gorm"
 )
 
