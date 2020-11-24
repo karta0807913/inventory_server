@@ -57,6 +57,7 @@
 | state.discard | boolean | -      | 報廢                         |
 | state.fixing  | boolean | -      | 送修                         |
 | state.unlabel | boolean | -      | 標籤未貼                     |
+| name          | strings | 否     | 財產名稱                     |
 | limit         | number  | 否     | 需要幾筆，預設20筆           |
 | offset        | number  | 否     | offset                       |
 

@@ -12,6 +12,8 @@ import (
 func (item *ItemTable) First(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
 		ItemID string `form:"item_id" binding:"required"`
+
+		Name *string `form:"name"`
 	}
 
 	var body Body
@@ -29,9 +31,15 @@ func (item *ItemTable) First(c *gin.Context, db *gorm.DB) error {
 
 	item.ItemID = body.ItemID
 
+	if body.Name != nil {
+		whereField = append(whereField, "item_tables.name=?")
+		valueField = append(valueField, body.Name)
+		item.Name = *body.Name
+	}
+
 	err = db.Where(
-		strings.Join(whereField, "and"),
-		valueField,
+		strings.Join(whereField, " and "),
+		valueField[0], valueField[1:],
 	).First(item).Error
 	return err
 }

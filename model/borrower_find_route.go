@@ -46,17 +46,22 @@ func (item *Borrower) Find(c *gin.Context, db *gorm.DB) ([]Borrower, error) {
 		}
 	}
 	soffset, ok := c.GetQuery("offset")
-	offset, err := strconv.Atoi(soffset)
-	if err != nil {
-		offset = 0
-	} else if offset < 0 {
+	var offset int
+	if ok {
+		offset, err = strconv.Atoi(soffset)
+		if err != nil {
+			offset = 0
+		} else if offset < 0 {
+			offset = 0
+		}
+	} else {
 		offset = 0
 	}
 	var result []Borrower
 	if len(whereField) != 0 {
 		db = db.Where(
-			strings.Join(whereField, "and"),
-			valueField,
+			strings.Join(whereField, " and "),
+			valueField[0], valueField[1:],
 		)
 	}
 	err = db.Limit(limit).Offset(offset).Find(&result).Error

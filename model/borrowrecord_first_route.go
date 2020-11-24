@@ -50,8 +50,8 @@ func (item *BorrowRecord) First(c *gin.Context, db *gorm.DB) error {
 	}
 
 	err = db.Where(
-		strings.Join(whereField, "and"),
-		valueField,
+		strings.Join(whereField, " and "),
+		valueField[0], valueField[1:],
 	).First(item).Error
 	return err
 }

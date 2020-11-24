@@ -35,5 +35,5 @@ func (insert *UserData) Update(c *gin.Context, db *gorm.DB) error {
 
 	return db.Select(
 		selectField[0], selectField[1:],
-	).Where("user_datas.password=?", body.Password).Updates(&insert).Error
+	).Where("user_data.password=?", body.Password).Updates(&insert).Error
 }
