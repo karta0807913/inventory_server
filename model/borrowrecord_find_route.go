@@ -12,6 +12,7 @@ import (
 // search options will put into struct
 func (item *BorrowRecord) Find(c *gin.Context, db *gorm.DB) ([]BorrowRecord, error) {
 	type Body struct {
+		ItemID   *uint `form:"item_id"`
 		Returned *bool `form:"returned"`
 	}
 	var body Body
@@ -19,6 +20,12 @@ func (item *BorrowRecord) Find(c *gin.Context, db *gorm.DB) ([]BorrowRecord, err
 
 	whereField := make([]string, 0)
 	valueField := make([]interface{}, 0)
+
+	if body.ItemID != nil {
+		whereField = append(whereField, "borrow_records.item_id=?")
+		valueField = append(valueField, body.ItemID)
+		item.ItemID = *body.ItemID
+	}
 
 	if body.Returned != nil {
 		whereField = append(whereField, "borrow_records.returned=?")

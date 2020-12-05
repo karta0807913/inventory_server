@@ -3,7 +3,6 @@ package model
 import (
 	"errors"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -13,9 +12,7 @@ import (
 // search options will put into struct
 func (item *BorrowRecord) First(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
-		ID        *uint      `form:"id"`
-		ReplyDate *time.Time `form:"reply_date"`
-		Returned  *bool      `form:"returned"`
+		ID *uint `form:"id"`
 	}
 
 	var body Body
@@ -31,18 +28,6 @@ func (item *BorrowRecord) First(c *gin.Context, db *gorm.DB) error {
 		whereField = append(whereField, "borrow_records.id=?")
 		valueField = append(valueField, body.ID)
 		item.ID = *body.ID
-	}
-
-	if body.ReplyDate != nil {
-		whereField = append(whereField, "borrow_records.reply_date=?")
-		valueField = append(valueField, body.ReplyDate)
-		item.ReplyDate = *body.ReplyDate
-	}
-
-	if body.Returned != nil {
-		whereField = append(whereField, "borrow_records.returned=?")
-		valueField = append(valueField, body.Returned)
-		item.Returned = *body.Returned
 	}
 
 	if len(valueField) == 0 {

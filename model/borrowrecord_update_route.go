@@ -14,11 +14,9 @@ func (insert *BorrowRecord) Update(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
 		ID uint `json:"id" binding:"required"`
 
-		BorrowerID *uint      `json:"borrower_id"`
-		BorrowDate *time.Time `json:"borrow_date"`
-		ReplyDate  *time.Time `json:"reply_date"`
-		Note       *string    `json:"note"`
-		Returned   *bool      `json:"returned"`
+		ReplyDate *time.Time `json:"reply_date"`
+		Note      *string    `json:"note"`
+		Returned  *bool      `json:"returned"`
 	}
 	var body Body
 	err := c.ShouldBindJSON(&body)
@@ -28,16 +26,6 @@ func (insert *BorrowRecord) Update(c *gin.Context, db *gorm.DB) error {
 	insert.ID = body.ID
 
 	selectField := make([]string, 0)
-
-	if body.BorrowerID != nil {
-		selectField = append(selectField, "borrower_id")
-		insert.BorrowerID = *body.BorrowerID
-	}
-
-	if body.BorrowDate != nil {
-		selectField = append(selectField, "borrow_date")
-		insert.BorrowDate = *body.BorrowDate
-	}
 
 	if body.ReplyDate != nil {
 		selectField = append(selectField, "reply_date")

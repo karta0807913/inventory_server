@@ -216,6 +216,8 @@
 | 參數    | 型別   | 必須   | 備註                         |
 | ------- | ------ | ------ | ---------------------------- |
 | id      | number | 否     | 借出紀錄id                   |
+| phone   | string | 否     | 借出人手機電話               |
+| name    | string | 否     | 借出人名稱                   |
 | limit   | number | 否     | 需要幾筆，預設20筆           |
 | offset  | number | 否     | offset                       |
 
@@ -266,7 +268,7 @@
 
 | 參數        | 型別   | 必須   | 備註                         |
 | -------     | ------ | ------ | ---------------------------- |
-| borrower_id | number | 否     | 更換借貸人                   |
+| id          | number | 是     | 借貸紀錄ID                   |
 | reply_date  | date   | 否     | 歸還時間                     |
 | returned    | bool   | 否     | 是否歸還                     |
 | note        | string | 否     | 備註                         |
@@ -293,10 +295,9 @@
 * note: 如果定義了 Borrower, 則不用定義 BorrowerID, 相反則同，
 定義Borrower會新增一個Borrower物件
 
-| 參數        | 型別   | 必須   | 備註                          |
-| -------     | ------ | ------ | ----------------------------  |
-| borrow_date | string | 是     | 借貸時間                      |
-| reply_date  | string | 是     | 歸還時間                      |
-| note        | string | 否     | 備註                          |
-| borrower    | Object | 否     | 借貸人物件，與/api/borrower同 |
-| borrower_id | number | 否     | 借貸人ID                      |
+| 參數        | 型別   | 必須   | 備註                         |
+| -------     | ------ | ------ | ---------------------------- |
+| borrow_date | string | 是     | 借貸時間                     |
+| reply_date  | string | 是     | 歸還時間                     |
+| note        | string | 否     | 備註                         |
+| item_id     | number | 否     | 借出物件ID                   |

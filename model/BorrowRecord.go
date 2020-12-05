@@ -1,37 +1,19 @@
 package model
 
 import (
-	"encoding/json"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
-//go:generate generate_router -type "BorrowRecord" -method "Find" -ignore "Borrower,ID,BorrowDate,ReplyDate"
-//go:generate generate_router -type "BorrowRecord" -method "First" -ignore "Borrower,BorrowDate"
-//go:generate generate_router -type "BorrowRecord" -method "Create" -options "Borrower,BorrowerID,Note" -ignore "Returned"
-//go:generate generate_router -type "BorrowRecord" -method "Update" -ignore "Borrower"
+//go:generate generate_router -type "BorrowRecord" -method "Find" -ignore "BorrowDate,ReplyDate,ID"
+//go:generate generate_router -type "BorrowRecord" -method "First" -ignore "ItemID,BorrowDate,Returned"
+//go:generate generate_router -type "BorrowRecord" -method "Create" -options "Note,ReplyDate" -ignore "Returned,Item"
+//go:generate generate_router -type "BorrowRecord" -method "Update" -ignore "Item,ItemID,BorrowDate"
 type BorrowRecord struct {
-	Borrower   Borrower  `json:"borrower" gorm:"foreignKey:borrower_id"`
 	ID         uint      `gorm:"primaryKey" json:"id"`
-	BorrowerID uint      `gorm:"not null" json:"borrower_id"`
-	BorrowDate time.Time `gorm:"index;not null" json:"borrow_date"`
-	ReplyDate  time.Time `gorm:"index" json:"reply_date"`
+	ItemID     uint      `gorm:"not null;index" json:"item_id"`
+	BorrowDate time.Time `gorm:"not null" json:"borrow_date"`
+	ReplyDate  time.Time `json:"reply_date"`
 	Note       string    `json:"note"`
 	Returned   bool      `json:"returned" gorm:"index;default:false;not null"`
-}
-
-func (record BorrowRecord) MarshalJSON() ([]byte, error) {
-	result := gin.H{
-		"id":          record.ID,
-		"borrower_id": record.BorrowerID,
-		"borrow_date": record.BorrowDate,
-		"reply_date":  record.ReplyDate,
-		"note":        record.Note,
-		"returned":    record.Returned,
-	}
-	if record.Borrower.ID != 0 {
-		result["borrower"] = record.Borrower
-	}
-	return json.Marshal(result)
+	Item       ItemTable `json:"item" gorm:"foreignKey:ItemID"`
 }
