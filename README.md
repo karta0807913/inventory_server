@@ -181,7 +181,7 @@
 }
 ```
 
-### PUT `/api/item`
+### PUT `/api/borrower`
 
 * 更新借出人詳細資料
 * body 
@@ -191,6 +191,7 @@
 
 | 參數          | 型別    | 必須  | 備註             |
 | ------------- | ------- | ----- | ---------------- |
+| id            | number  | 是    | 借出人ID         |
 | phone         | string  | 否    | 借出人手機       |
 | name          | string  | 否    | 借出人名稱       |
 
@@ -266,12 +267,12 @@
 `Content-Type: application/json`
 * note: 可選必須至少一項
 
-| 參數        | 型別   | 必須   | 備註                         |
-| -------     | ------ | ------ | ---------------------------- |
-| id          | number | 是     | 借貸紀錄ID                   |
-| reply_date  | date   | 否     | 歸還時間                     |
-| returned    | bool   | 否     | 是否歸還                     |
-| note        | string | 否     | 備註                         |
+| 參數       | 型別   | 必須   | 備註                         |
+| -------    | ------ | ------ | ---------------------------- |
+| id         | number | 是     | 借貸紀錄ID                   |
+| reply_date | date   | 否     | 歸還時間                     |
+| returned   | bool   | 否     | 是否歸還                     |
+| note       | string | 否     | 備註                         |
 
 * error code
 
