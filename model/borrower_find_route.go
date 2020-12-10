@@ -16,7 +16,8 @@ func (item *Borrower) Find(c *gin.Context, db *gorm.DB) ([]Borrower, error) {
 		Phone *string `form:"phone"`
 	}
 	var body Body
-	err := c.ShouldBindQuery(&body)
+	var err error
+	_ = c.ShouldBindQuery(&body)
 
 	whereField := make([]string, 0)
 	valueField := make([]interface{}, 0)

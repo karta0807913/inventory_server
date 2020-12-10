@@ -43,7 +43,7 @@ func (insert *BorrowRecord) Update(c *gin.Context, db *gorm.DB) error {
 	}
 
 	if len(selectField) == 0 {
-		return errors.New("rqeuire at least one option")
+		return errors.New("require at least one option")
 	}
 
 	return db.Select(

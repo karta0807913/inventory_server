@@ -16,15 +16,24 @@ type ItemState struct {
 //go:generate generate_router -type "ItemTable" -method "Create" -ignore "ID"
 //go:generate generate_router -type "ItemTable" -method "Update" -ignore "ID,ItemID,Name,Date,Cost" -indexField "ItemID"
 type ItemTable struct {
-	ID       uint      `gorm:"primaryKey" json:"id"`
-	ItemID   string    `gorm:"not null;uniqueIndex" json:"item_id"`
-	Name     string    `gorm:"not null;index" json:"name"`
-	Date     string    `gorm:"not null" json:"date"`
-	AgeLimit uint      `gorm:"not null" json:"age_limit"`
-	Cost     uint      `gorm:"not null" json:"cost"`
-	Location string    `gorm:"not null" json:"location"`
-	State    ItemState `gorm:"not null;type:INT;index" json:"state"`
-	Note     string    `gorm:"not null" json:"note"`
+	//物品ID
+	ID uint `gorm:"primaryKey" json:"id"`
+	//學校產條上的ID
+	ItemID string `gorm:"not null;uniqueIndex" json:"item_id"`
+	//物品名稱
+	Name string `gorm:"not null;index" json:"name"`
+	//構入日期
+	Date string `gorm:"not null" json:"date"`
+	//使用年限
+	AgeLimit uint `gorm:"not null" json:"age_limit"`
+	//物品價值
+	Cost uint `gorm:"not null" json:"cost"`
+	//物品存放位置
+	Location string `gorm:"not null" json:"location"`
+	//物品現今狀態
+	State ItemState `gorm:"not null;type:INT;index" json:"state"`
+	//備註
+	Note string `gorm:"not null" json:"note"`
 }
 
 func (state *ItemState) Scan(value interface{}) error {

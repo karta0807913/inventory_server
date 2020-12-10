@@ -16,7 +16,8 @@ func (item *BorrowRecord) Find(c *gin.Context, db *gorm.DB) ([]BorrowRecord, err
 		Returned *bool `form:"returned"`
 	}
 	var body Body
-	err := c.ShouldBindQuery(&body)
+	var err error
+	_ = c.ShouldBindQuery(&body)
 
 	whereField := make([]string, 0)
 	valueField := make([]interface{}, 0)

@@ -1,7 +1,6 @@
 package model
 
 import (
-	"errors"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -37,10 +36,6 @@ func (insert *BorrowRecord) Create(c *gin.Context, db *gorm.DB) error {
 	if body.Note != nil {
 		selectField = append(selectField, "note")
 		insert.Note = *body.Note
-	}
-
-	if len(selectField) == 2 {
-		return errors.New("rqeuire at least one option")
 	}
 
 	insert.ItemID = body.ItemID

@@ -16,7 +16,10 @@ func main() {
 		log.Fatal("start db error", err)
 	}
 
-	model.InitDB(db)
+	err = model.InitDB(db)
+	if err != nil {
+		log.Fatalf("init db error %s", err)
+	}
 
 	serv := gin.Default()
 	_, err = os.Stat(PrivateKeyPath)

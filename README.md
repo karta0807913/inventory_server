@@ -293,12 +293,11 @@
 * body 
 * header
 `Content-Type: application/json`
-* note: 如果定義了 Borrower, 則不用定義 BorrowerID, 相反則同，
-定義Borrower會新增一個Borrower物件
 
-| 參數        | 型別   | 必須   | 備註                         |
-| -------     | ------ | ------ | ---------------------------- |
-| borrow_date | string | 是     | 借貸時間                     |
-| reply_date  | string | 是     | 歸還時間                     |
-| note        | string | 否     | 備註                         |
-| item_id     | number | 否     | 借出物件ID                   |
+| 參數        | 型別   | 必須   | 備註          |
+| -------     | ------ | ------ | ------------- |
+| borrower_id | number | 否     | 借貸人ID      |
+| borrow_date | string | 是     | 借貸時間      |
+| reply_date  | string | 是     | 歸還時間      |
+| note        | string | 否     | 備註          |
+| item_id     | number | 否     | 借出物件ID    |

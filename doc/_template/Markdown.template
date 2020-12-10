@@ -1,0 +1,29 @@
+{{ define "ParamsTable" }}
+| parameters | type | required | note |
+| ---------- | ---- | -------- | ---- |{{ range . }}
+| {{ .Alias }} | {{ .Type }} | {{ if .Required }} Y {{ else }} N {{ end }} | {{ .Comment }} | {{ end }}
+{{ end }}
+
+{{ define "Create" }}
+### POST `{{ .Path }}`
+
+* `//TODO: comment`
+
+* Data Params
+{{ template "ParamsTable" .Fields }}{{ end }}
+
+{{ define "Updates" }}
+### PUT `{{ .Path }}`
+
+* `//TODO: comment`
+
+* Data Params
+{{ template "ParamsTable" .Fields }}{{ end }}
+
+{{ define "Search" }}
+### GET `{{ .Path }}`
+
+* `//TODO: comment`
+
+* Data Params
+{{ template "ParamsTable" .Fields }}{{ end }}
