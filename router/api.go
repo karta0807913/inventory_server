@@ -99,7 +99,7 @@ func ApiRouter(config RouterConfig) {
 			err = borrower.First(c, db)
 			result = borrower
 		} else {
-			result, err = borrower.Find(c, db.Joins("Borrower"))
+			result, err = borrower.Find(c, db)
 		}
 		if err != nil {
 			log.Printf("search got error %s\n", err)
@@ -115,6 +115,7 @@ func ApiRouter(config RouterConfig) {
 		var borrower model.BorrowRecord
 		err := borrower.Update(c, db)
 		if err != nil {
+			log.Println(err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 				"message": "update error",
 			})
@@ -127,6 +128,7 @@ func ApiRouter(config RouterConfig) {
 		var borrower model.BorrowRecord
 		err := borrower.Create(c, db)
 		if err != nil {
+			log.Println(err)
 			c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{
 				"message": "create borrower failed",
 			})

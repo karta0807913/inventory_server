@@ -6,6 +6,18 @@ var UpdateBorrowRecord Document = Document{
 	Mode: "Updates",
     Fields: []Field{
         {
+            Required: true,
+            Comment: "借貸紀錄ID",
+            Name: "ID",
+            Alias: "id",
+            Type: "uint",
+        },{
+            Required: false,
+            Comment: "借出人ID",
+            Name: "BorrowerID",
+            Alias: "borrower_id",
+            Type: "uint",
+        },{
             Required: false,
             Comment: "收回物品時間",
             Name: "ReplyDate",

@@ -11,6 +11,7 @@ import (
 // data will put into struct
 func (insert *BorrowRecord) Create(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
+		BorrowerID uint      `json:"borrower_id" binding:"required"`
 		ItemID     uint      `json:"item_id" binding:"required"`
 		BorrowDate time.Time `json:"borrow_date" binding:"required"`
 
@@ -24,6 +25,7 @@ func (insert *BorrowRecord) Create(c *gin.Context, db *gorm.DB) error {
 	}
 
 	selectField := []string{
+		"borrower_id",
 		"item_id",
 		"borrow_date",
 	}
@@ -38,6 +40,7 @@ func (insert *BorrowRecord) Create(c *gin.Context, db *gorm.DB) error {
 		insert.Note = *body.Note
 	}
 
+	insert.BorrowerID = body.BorrowerID
 	insert.ItemID = body.ItemID
 	insert.BorrowDate = body.BorrowDate
 

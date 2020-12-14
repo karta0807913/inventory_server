@@ -1,7 +1,7 @@
 {{ define "ParamsTable" }}
-| parameters | type | required | note |
+| 參數 | 型別 | 必須 | 備註 |
 | ---------- | ---- | -------- | ---- |{{ range . }}
-| {{ .Alias }} | {{ .Type }} | {{ if .Required }} Y {{ else }} N {{ end }} | {{ .Comment }} | {{ end }}
+| {{ .Alias }} | {{ .Type }} | {{ if .Required }} 是 {{ else }} 否 {{ end }} | {{ .Comment }} |{{ end }}
 {{ end }}
 
 {{ define "Create" }}

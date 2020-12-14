@@ -12,7 +12,8 @@ import (
 // search options will put into struct
 func (item *BorrowRecord) First(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
-		ID *uint `form:"id"`
+		ID         *uint `form:"id"`
+		BorrowerID *uint `form:"borrower_id"`
 	}
 
 	var body Body
@@ -28,6 +29,12 @@ func (item *BorrowRecord) First(c *gin.Context, db *gorm.DB) error {
 		whereField = append(whereField, "borrow_records.id=?")
 		valueField = append(valueField, body.ID)
 		item.ID = *body.ID
+	}
+
+	if body.BorrowerID != nil {
+		whereField = append(whereField, "borrow_records.borrower_id=?")
+		valueField = append(valueField, body.BorrowerID)
+		item.BorrowerID = *body.BorrowerID
 	}
 
 	if len(valueField) == 0 {

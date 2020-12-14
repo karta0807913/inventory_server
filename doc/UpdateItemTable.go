@@ -6,6 +6,12 @@ var UpdateItemTable Document = Document{
 	Mode: "Updates",
     Fields: []Field{
         {
+            Required: true,
+            Comment: "學校產條上的ID",
+            Name: "ItemID",
+            Alias: "item_id",
+            Type: "string",
+        },{
             Required: false,
             Comment: "使用年限",
             Name: "AgeLimit",

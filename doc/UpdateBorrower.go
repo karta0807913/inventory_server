@@ -6,6 +6,12 @@ var UpdateBorrower Document = Document{
 	Mode: "Updates",
     Fields: []Field{
         {
+            Required: true,
+            Comment: "借貸人ID",
+            Name: "ID",
+            Alias: "id",
+            Type: "uint",
+        },{
             Required: false,
             Comment: "借貸人名稱",
             Name: "Name",

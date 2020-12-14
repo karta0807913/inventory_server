@@ -128,10 +128,12 @@
 * header
 `Content-Type: application/json`
 
-| 參數    | 型別   | 必須   | 備註                         |
-| ------- | ------ | ------ | ---------------------------- |
-| name    | string | 是     | 借出人名子                   |
-| phone   | string | 是     | 借出人手機                   |
+
+| 參數 | 型別 | 必須 | 備註 |
+| ---------- | ---- | -------- | ---- |
+| name | string |  是  | 借貸人名稱 |
+| phone | string |  是  | 借貸人手機 |
+
 
 * error code
 
@@ -189,11 +191,13 @@
 `Content-Type: application/json`
 * note: 可選必須至少一項
 
-| 參數          | 型別    | 必須  | 備註             |
-| ------------- | ------- | ----- | ---------------- |
-| id            | number  | 是    | 借出人ID         |
-| phone         | string  | 否    | 借出人手機       |
-| name          | string  | 否    | 借出人名稱       |
+
+| 參數 | 型別 | 必須 | 備註 |
+| ---------- | ---- | -------- | ---- |
+| id | uint |  是  | 借貸人ID |
+| name | string |  否  | 借貸人名稱 |
+| phone | string |  否  | 借貸人手機 |
+
 
 * error code
 
@@ -245,11 +249,6 @@
 [
   {
     "borrow_date": "2020-09-29T19:12:12.177418328+08:00", 
-    "borrower": {
-      "id": 1, 
-      "name": "User1", 
-      "phone": "09122345678"
-    }, 
     "borrower_id": 1, 
     "id": 1, 
     "note": "", 
@@ -267,12 +266,15 @@
 `Content-Type: application/json`
 * note: 可選必須至少一項
 
-| 參數       | 型別   | 必須   | 備註                         |
-| -------    | ------ | ------ | ---------------------------- |
-| id         | number | 是     | 借貸紀錄ID                   |
-| reply_date | date   | 否     | 歸還時間                     |
-| returned   | bool   | 否     | 是否歸還                     |
-| note       | string | 否     | 備註                         |
+
+| 參數 | 型別 | 必須 | 備註 |
+| ---------- | ---- | -------- | ---- |
+| id | uint |  是  | 借貸紀錄ID |
+| borrower_id | uint |  否  | 借出人ID |
+| reply_date | time.Time |  否  | 收回物品時間 |
+| note | string |  否  | 備註 |
+| returned | bool |  否  | 是否歸還 |
+
 
 * error code
 
@@ -294,10 +296,30 @@
 * header
 `Content-Type: application/json`
 
-| 參數        | 型別   | 必須   | 備註          |
-| -------     | ------ | ------ | ------------- |
-| borrower_id | number | 否     | 借貸人ID      |
-| borrow_date | string | 是     | 借貸時間      |
-| reply_date  | string | 是     | 歸還時間      |
-| note        | string | 否     | 備註          |
-| item_id     | number | 否     | 借出物件ID    |
+
+| 參數 | 型別 | 必須 | 備註 |
+| ---------- | ---- | -------- | ---- |
+| borrower_id | uint |  是  | 借出人ID |
+| item_id | uint |  是  | 借出物品ID |
+| borrow_date | time.Time |  是  | 借出時間 |
+| reply_date | time.Time |  否  | 收回物品時間 |
+| note | string |  否  | 備註 |
+
+* error code
+
+| Status Code | 備註                   |
+| ----------- | ---------------------- |
+| 400         | 參數或是item not found |
+| 502         | 資料庫更新失敗         |
+
+* success reply
+
+```
+{
+  "borrow_date": "2020-09-29T15:49:54.236129179+08:00", 
+  "borrower_id": 1, 
+  "id": 1, 
+  "note": "", 
+  "reply_date": "0001-01-01T00:00:00Z"
+}
+```
