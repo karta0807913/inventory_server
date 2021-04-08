@@ -39,7 +39,7 @@ func (item *ItemTable) Find(c *gin.Context, db *gorm.DB) ([]ItemTable, error) {
 		if err != nil {
 			limit = 20
 		} else {
-			if limit <= 0 || 20 < limit {
+			if limit <= 0 {
 				limit = 20
 			}
 		}
