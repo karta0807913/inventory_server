@@ -128,12 +128,7 @@
 * header
 `Content-Type: application/json`
 
-
-| 參數 | 型別 | 必須 | 備註 |
-| ---------- | ---- | -------- | ---- |
-| name | string |  是  | 借貸人名稱 |
-| phone | string |  是  | 借貸人手機 |
-
+{{ template "ParamsTable" .CreateBorrower.Fields }}
 
 
 * error code
@@ -192,13 +187,7 @@
 `Content-Type: application/json`
 * note: 可選必須至少一項
 
-
-| 參數 | 型別 | 必須 | 備註 |
-| ---------- | ---- | -------- | ---- |
-| id | uint |  是  | 借貸人ID |
-| name | string |  否  | 借貸人名稱 |
-| phone | string |  否  | 借貸人手機 |
-
+{{ template "ParamsTable" .UpdateBorrower.Fields }}
 
 * error code
 
@@ -268,15 +257,7 @@
 `Content-Type: application/json`
 * note: 可選必須至少一項
 
-
-| 參數 | 型別 | 必須 | 備註 |
-| ---------- | ---- | -------- | ---- |
-| id | uint |  是  | 借貸紀錄ID |
-| borrower_id | uint |  否  | 借出人ID |
-| reply_date | time.Time |  否  | 收回物品時間 |
-| note | string |  否  | 備註 |
-| returned | bool |  否  | 是否歸還 |
-
+{{ template "ParamsTable" .UpdateBorrowRecord.Fields }}
 
 * error code
 
@@ -298,15 +279,7 @@
 * header
 `Content-Type: application/json`
 
-
-| 參數 | 型別 | 必須 | 備註 |
-| ---------- | ---- | -------- | ---- |
-| borrower_id | uint |  是  | 借出人ID |
-| item_id | uint |  是  | 借出物品ID |
-| borrow_date | time.Time |  是  | 借出時間 |
-| reply_date | time.Time |  否  | 收回物品時間 |
-| note | string |  否  | 備註 |
-
+{{ template "ParamsTable" .CreateBorrowRecord.Fields }}
 
 * error code
 
