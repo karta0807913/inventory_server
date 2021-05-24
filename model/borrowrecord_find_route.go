@@ -14,7 +14,6 @@ func (item *BorrowRecord) Find(c *gin.Context, db *gorm.DB) ([]BorrowRecord, err
 	type Body struct {
 		BorrowerID *uint `form:"borrower_id"`
 		ItemID     *uint `form:"item_id"`
-		Returned   *bool `form:"returned"`
 	}
 	var body Body
 	var err error
@@ -33,12 +32,6 @@ func (item *BorrowRecord) Find(c *gin.Context, db *gorm.DB) ([]BorrowRecord, err
 		whereField = append(whereField, "borrow_records.item_id=?")
 		valueField = append(valueField, body.ItemID)
 		item.ItemID = *body.ItemID
-	}
-
-	if body.Returned != nil {
-		whereField = append(whereField, "borrow_records.returned=?")
-		valueField = append(valueField, body.Returned)
-		item.Returned = *body.Returned
 	}
 
 	var limit int = 20

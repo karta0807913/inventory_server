@@ -101,7 +101,7 @@ func ApiRouter(config RouterConfig) {
 			err = borrower.First(c, db)
 			result = borrower
 		} else {
-			result, err = borrower.Find(c, db)
+			result, err = borrower.Find(c, db.Order("reply_date, borrow_date"))
 		}
 		if err != nil {
 			log.Printf("search got error %s\n", err)

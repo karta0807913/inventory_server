@@ -17,12 +17,6 @@ var FindBorrowRecord Document = Document{
             Name: "ItemID",
             Alias: "item_id",
             Type: "uint",
-        },{
-            Required: false,
-            Comment: "是否歸還",
-            Name: "Returned",
-            Alias: "returned",
-            Type: "bool",
         },
     },
 }

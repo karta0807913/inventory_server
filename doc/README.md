@@ -17,7 +17,7 @@
 
 ```
 {
-    "nickname": "nickname"
+    "Name": "nickname"
 }
 ```
 
@@ -39,6 +39,20 @@
 
 ```
 {}
+```
+
+### POST `/me`
+
+* 使用session確認資料
+* header
+`Content-Type: application/json`
+
+* success reply
+
+```
+{
+    "Name": "nickname",
+}
 ```
 
 # api
@@ -209,14 +223,13 @@
 * query
 * note: 如沒有參數則回復全部
 
-| 參數        | 型別   | 必須   | 備註                         |
-| -------     | ------ | ------ | ---------------------------- |
-| id          | number | 否     | 借出紀錄id                   |
-| borrower_id | number | 否     | 借出人id                     |
-| phone       | string | 否     | 借出人手機電話               |
-| name        | string | 否     | 借出人名稱                   |
-| limit       | number | 否     | 需要幾筆，預設20筆           |
-| offset      | number | 否     | offset                       |
+| 參數        | 型別   | 必須   | 備註                |
+| -------     | ------ | ------ | ------------------- |
+| id          | number | 否     | 借出紀錄ID          |
+| item_id     | number | 否     | 借出物品ID          |
+| borrower_id | number | 否     | 借出人ID            |
+| limit       | number | 否     | 需要幾筆，預設20筆  |
+| offset      | number | 否     | offset              |
 
 * error code
 

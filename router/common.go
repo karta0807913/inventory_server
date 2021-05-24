@@ -24,6 +24,22 @@ func saltPassword(str string) string {
 func CommonRouter(config RouterConfig) {
 	router := config.Router
 	db := config.DB
+
+	router.GET("/me", func(c *gin.Context) {
+		session := c.MustGet("session").(serverutil.Session)
+		userID := uint(session.Get("user_id").(float64))
+		var user model.UserData
+		err := db.Select("ID", "Account", "Name").Where("id=?", userID).First(&user).Error
+		if err != nil {
+			log.Println(err)
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"Name": user.Name,
+		})
+	})
+
 	router.POST("/login", func(c *gin.Context) {
 		var body model.UserData
 		err := c.ShouldBindJSON(&body)
