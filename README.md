@@ -255,6 +255,7 @@
 {
   "borrow_date": "2020-09-29T15:49:54.236129179+08:00", 
   "borrower_id": 1, 
+  "item_id": 1,
   "id": 1, 
   "note": "", 
   "reply_date": "0001-01-01T00:00:00Z"
@@ -266,9 +267,10 @@
   {
     "borrow_date": "2020-09-29T19:12:12.177418328+08:00", 
     "borrower_id": 1, 
-    "id": 1, 
+    "id": 2, 
     "note": "", 
-    "reply_date": "0001-01-01T00:00:00Z", 
+    "item_id": 1,
+    "reply_date": null,
   }
 ]
 ```
