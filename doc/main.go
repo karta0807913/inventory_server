@@ -16,18 +16,19 @@ var (
 )
 
 var DocumentMap map[string]Document = map[string]Document{
-	"CreateBorrowRecord": CreateBorrowRecord,
-	"CreateBorrower":     CreateBorrower,
-	"CreateItemTable":    CreateItemTable,
-	"FindBorrowRecord":   FindBorrowRecord,
-	"FindBorrower":       FindBorrower,
-	"FirstBorrowRecord":  FirstBorrowRecord,
-	"FirstBorrower":      FirstBorrower,
-	"FirstItemTable":     FirstItemTable,
-	"UpdateBorrowRecord": UpdateBorrowRecord,
-	"UpdateBorrower":     UpdateBorrower,
-	"UpdateItemTable":    UpdateItemTable,
-	"UpdateUserData":     UpdateUserData,
+     "CreateBorrowRecord": CreateBorrowRecord,
+     "CreateBorrower": CreateBorrower,
+     "CreateItemTable": CreateItemTable,
+     "FindBorrowRecord": FindBorrowRecord,
+     "FindBorrower": FindBorrower,
+     "FirstBorrowRecord": FirstBorrowRecord,
+     "FirstBorrower": FirstBorrower,
+     "FirstItemTable": FirstItemTable,
+     "UpdateBorrowRecord": UpdateBorrowRecord,
+     "UpdateBorrower": UpdateBorrower,
+     "UpdateItemTable": UpdateItemTable,
+     "UpdateUserData": UpdateUserData,
+    
 }
 
 func main() {

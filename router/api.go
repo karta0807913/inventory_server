@@ -16,8 +16,9 @@ func ApiRouter(config RouterConfig) {
 		var item model.ItemTable
 		var result interface{}
 		var err error
-		_, ok := c.GetQuery("item_id")
-		if ok {
+		_, itemOk := c.GetQuery("item_id")
+		_, idOk := c.GetQuery("id")
+		if itemOk || idOk {
 			err = item.First(c, db)
 			result = item
 		} else {
@@ -82,6 +83,7 @@ func ApiRouter(config RouterConfig) {
 		var borrower model.Borrower
 		err := borrower.Update(c, db)
 		if err != nil {
+			log.Println(err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 				"message": "update error",
 			})
@@ -129,11 +131,29 @@ func ApiRouter(config RouterConfig) {
 		err := borrower.Create(c, db)
 		if err != nil {
 			log.Println(err)
-			c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"message": "create borrower failed",
 			})
 			return
 		}
 		c.JSON(http.StatusOK, borrower)
+	})
+
+	router.GET("/borrower_fuzzy", func(c *gin.Context) {
+		var result []model.Borrower
+		name, ok := c.GetQuery("name")
+		query := db.Limit(20)
+		if ok {
+			query = query.Where("name like ?", name+"%")
+		}
+		phone, ok := c.GetQuery("phone")
+		if ok {
+			query = query.Where("phone like ?", phone+"%")
+		}
+		err := query.Find(&result).Error
+		if err != nil {
+			log.Println(err)
+		}
+		c.JSON(http.StatusOK, result)
 	})
 }

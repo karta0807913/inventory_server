@@ -8,8 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// this file generate by go generate, please don't edit it
-// data will put into struct
 func (insert *BorrowRecord) Update(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
 		ID uint `json:"id" binding:"required"`
@@ -33,22 +31,27 @@ func (insert *BorrowRecord) Update(c *gin.Context, db *gorm.DB) error {
 		insert.BorrowerID = *body.BorrowerID
 	}
 
-	if body.ReplyDate != nil {
-		selectField = append(selectField, "reply_date")
-		insert.ReplyDate = *body.ReplyDate
-	}
-
 	if body.Note != nil {
 		selectField = append(selectField, "note")
 		insert.Note = *body.Note
 	}
 
 	if body.Returned != nil {
-		selectField = append(selectField, "returned")
-		insert.Returned = *body.Returned
+		selectField = append(selectField, "reply_date")
+		if *body.Returned {
+			t := time.Now()
+			insert.ReplyDate = &t
+		} else {
+			insert.ReplyDate = nil
+		}
 	}
 
-	if len(selectField) == 0 {
+	if body.ReplyDate != nil {
+		selectField = append(selectField, "reply_date")
+		insert.ReplyDate = body.ReplyDate
+	}
+
+	if len(selectField) < (0 + 0 + 1) {
 		return errors.New("require at least one option")
 	}
 

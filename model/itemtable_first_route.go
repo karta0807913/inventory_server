@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -11,9 +12,8 @@ import (
 // search options will put into struct
 func (item *ItemTable) First(c *gin.Context, db *gorm.DB) error {
 	type Body struct {
-		ItemID string `form:"item_id" binding:"required"`
-
-		Name *string `form:"name"`
+		ID     *uint   `form:"id"`
+		ItemID *string `form:"item_id"`
 	}
 
 	var body Body
@@ -22,19 +22,23 @@ func (item *ItemTable) First(c *gin.Context, db *gorm.DB) error {
 		return err
 	}
 
-	whereField := []string{
-		"item_tables.item_id=?",
-	}
-	valueField := []interface{}{
-		body.ItemID,
+	whereField := make([]string, 0)
+	valueField := make([]interface{}, 0)
+
+	if body.ID != nil {
+		whereField = append(whereField, "item_tables.id=?")
+		valueField = append(valueField, body.ID)
+		item.ID = *body.ID
 	}
 
-	item.ItemID = body.ItemID
+	if body.ItemID != nil {
+		whereField = append(whereField, "item_tables.item_id=?")
+		valueField = append(valueField, body.ItemID)
+		item.ItemID = *body.ItemID
+	}
 
-	if body.Name != nil {
-		whereField = append(whereField, "item_tables.name=?")
-		valueField = append(valueField, body.Name)
-		item.Name = *body.Name
+	if len(valueField) < (0 + 0 + 1) {
+		return errors.New("require option")
 	}
 
 	err = db.Where(

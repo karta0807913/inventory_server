@@ -35,7 +35,7 @@ func (insert *Borrower) Update(c *gin.Context, db *gorm.DB) error {
 		insert.Phone = *body.Phone
 	}
 
-	if len(selectField) == 0 {
+	if len(selectField) < (0 + 0 + 1) {
 		return errors.New("require at least one option")
 	}
 

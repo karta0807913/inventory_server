@@ -32,7 +32,7 @@ func (insert *BorrowRecord) Create(c *gin.Context, db *gorm.DB) error {
 
 	if body.ReplyDate != nil {
 		selectField = append(selectField, "reply_date")
-		insert.ReplyDate = *body.ReplyDate
+		insert.ReplyDate = body.ReplyDate
 	}
 
 	if body.Note != nil {

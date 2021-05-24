@@ -12,7 +12,7 @@ type ItemState struct {
 	Discard bool `json:"discard"`
 }
 
-//go:generate generate_router -type "ItemTable" -method "First" -ignore "ID,State" -require "ItemID"
+//go:generate generate_router -type "ItemTable" -method "First" -ignore "State,Name"
 //go:generate generate_router -type "ItemTable" -method "Create" -ignore "ID"
 //go:generate generate_router -type "ItemTable" -method "Update" -ignore "ID,ItemID,Name,Date,Cost" -indexField "ItemID"
 type ItemTable struct {

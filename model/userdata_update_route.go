@@ -29,7 +29,7 @@ func (insert *UserData) Update(c *gin.Context, db *gorm.DB) error {
 		insert.Name = *body.Name
 	}
 
-	if len(selectField) == 0 {
+	if len(selectField) < (0 + 0 + 1) {
 		return errors.New("require at least one option")
 	}
 

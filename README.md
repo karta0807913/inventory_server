@@ -51,6 +51,7 @@
 
 | 參數          | 型別    | 必須   | 備註                         |
 | -------       | ------  | ------ | ---------------------------- |
+| id            | int     | 否     | 財產資料庫編號，例如1        |
 | item_id       | string  | 否     | 財產編號，例如3111401-47-3-3 |
 | state         | Object  | 否     | 財產狀態                     |
 | state.correct | boolean | -      | 符合                         |
@@ -68,7 +69,7 @@
 | 400         | 參數或是item not found |
 
 * success reply
-* note: 在定義`item_id`的時候為object，其他情況為array
+* note: 在定義`item_id`或`id`的時候為object，其他情況為array
 
 ```
 {
@@ -255,7 +256,6 @@
     "id": 1, 
     "note": "", 
     "reply_date": "0001-01-01T00:00:00Z", 
-    "returned": false
   }
 ]
 ```
@@ -267,16 +267,15 @@
 * header
 `Content-Type: application/json`
 * note: 可選必須至少一項
+* note: 如果想要清除reply_date的話就把returned設為true
 
-
-| 參數 | 型別 | 必須 | 備註 |
-| ---------- | ---- | -------- | ---- |
-| id | uint |  是  | 借貸紀錄ID |
-| borrower_id | uint |  否  | 借出人ID |
-| reply_date | time.Time |  否  | 收回物品時間 |
-| note | string |  否  | 備註 |
-| returned | bool |  否  | 是否歸還 |
-
+| 參數        | 型別      | 必須     | 備註         |
+| ----------  | ----      | -------- | ----         |
+| id          | uint      | 是       | 借貸紀錄ID   |
+| borrower_id | uint      | 否       | 借出人ID     |
+| reply_date  | time.Time | 否       | 收回物品時間 |
+| note        | string    | 否       | 備註         |
+| returned    | bool      | 否       | 是否歸還     |
 
 * error code
 
@@ -304,7 +303,7 @@
 | borrower_id | uint |  是  | 借出人ID |
 | item_id | uint |  是  | 借出物品ID |
 | borrow_date | time.Time |  是  | 借出時間 |
-| reply_date | time.Time |  否  | 收回物品時間 |
+| reply_date | *time.Time |  否  | 收回物品時間 |
 | note | string |  否  | 備註 |
 
 
@@ -326,3 +325,32 @@
   "reply_date": "0001-01-01T00:00:00Z"
 }
 ```
+
+### GET `/api/borrower_fuzzy`
+
+* 模糊搜尋使用者
+* header
+`Content-Type: application/json`
+
+| 參數    | 型別   | 必須   | 備註         |
+| ------- | ------ | ------ | ------------ |
+| name    | string | 否     | 使用者名稱   |
+| phone   | string | 否     | 使用者電話   |
+
+* success reply
+
+```
+[{
+  "id": 1,
+  "name": "User1",
+  "phone": "09122345678"
+},{
+  "id": 2,
+  "name": "User2",
+  "phone": "09122345678"
+}]
+```
+
+* 備註
+
+名稱與電話只能擇一送出，如兩者都有，則以電話為準。

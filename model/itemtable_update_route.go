@@ -47,7 +47,7 @@ func (insert *ItemTable) Update(c *gin.Context, db *gorm.DB) error {
 		insert.Note = *body.Note
 	}
 
-	if len(selectField) == 0 {
+	if len(selectField) < (0 + 0 + 1) {
 		return errors.New("require at least one option")
 	}
 

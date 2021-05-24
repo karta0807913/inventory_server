@@ -28,7 +28,7 @@ var CreateBorrowRecord Document = Document{
             Comment: "收回物品時間",
             Name: "ReplyDate",
             Alias: "reply_date",
-            Type: "time.Time",
+            Type: "*time.Time",
         },{
             Required: false,
             Comment: "備註",

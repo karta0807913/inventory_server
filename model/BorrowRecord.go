@@ -7,7 +7,6 @@ import (
 //go:generate generate_router -type "BorrowRecord" -method "Find" -ignore "BorrowDate,ReplyDate,ID"
 //go:generate generate_router -type "BorrowRecord" -method "First" -ignore "ItemID,BorrowDate,Returned"
 //go:generate generate_router -type "BorrowRecord" -method "Create" -options "Note,ReplyDate" -ignore "Returned,Item" -minItem 0
-//go:generate generate_router -type "BorrowRecord" -method "Update" -ignore "Item,ItemID,BorrowDate"
 type BorrowRecord struct {
 	//借貸紀錄ID
 	ID uint `gorm:"primaryKey" json:"id"`
@@ -18,7 +17,7 @@ type BorrowRecord struct {
 	//借出時間
 	BorrowDate time.Time `gorm:"not null" json:"borrow_date"`
 	//收回物品時間
-	ReplyDate time.Time `json:"reply_date"`
+	ReplyDate *time.Time `json:"reply_date"`
 	//備註
 	Note string `json:"note"`
 	//是否歸還
